@@ -6,7 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_blue"
+    android:background="@color/white"
     tools:context=".homePageActivity">
 
     <!-- סרגל עליון חום בהיר -->
@@ -14,7 +14,7 @@
         android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:background="@color/brown_main"
+        android:background="@color/brown"
         app:layout_constraintTop_toTopOf="parent"/>
 
     <!-- סרגל תחתון חום כהה יותר -->
@@ -22,7 +22,7 @@
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:background="@color/dark_brown"
+        android:background="@color/brown"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <!-- כפתור יציאה -->

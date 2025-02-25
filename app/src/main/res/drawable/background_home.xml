@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- רקע חום מלא -->
-    <item android:drawable="@color/brown_main"/>
+    <item android:drawable="@color/brown"/>
 
     <!-- רקע לבן באמצע -->
     <item>
@@ -10,10 +10,10 @@
             <gradient
                 android:type="linear"
                 android:angle="90"
-                android:startColor="@color/brown_main"
+                android:startColor="@color/brown"
                 android:centerColor="@color/white"
                 android:centerY="0.5"
-                android:endColor="@color/brown_main"/>
+                android:endColor="@color/brown"/>
         </shape>
     </item>
 
