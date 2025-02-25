@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- מצב לחוץ -->
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
             <solid android:color="#FF8C00"/> <!-- צבע לחוץ -->
             <corners android:radius="25dp"/>
         </shape>
     </item>
+
+    <!-- מצב רגיל (לא לחוץ) -->
     <item>
-        <shape android:shape="rectangle">
-            <solid android:color="#F5A623"/> <!-- צבע רגיל -->
-            <corners android:radius="25dp"/>
-            <stroke android:width="2dp" android:color="#FFFFFF"/> <!-- מסגרת לבנה -->
+        <shape xmlns:android="http://schemas.android.com/apk/res/android">
+            <solid android:color="@color/brown"/> <!-- צבע הרקע של הכפתור (חום) -->
+            <corners android:radius="16dp"/> <!-- פינות מעוגלות -->
         </shape>
     </item>
 </selector>
