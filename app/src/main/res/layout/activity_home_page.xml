@@ -14,8 +14,6 @@
         android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="@color/light_orange"
-        android:layout_height="120dp"
         android:background="@color/brown"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -24,10 +22,20 @@
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="@color/light_orange"
-        android:layout_height="120dp"
         android:background="@color/brown"
         app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <Button
+        android:id="@+id/addPostButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:text="+"
+        android:textSize="24sp"
+        android:textColor="@color/white"
+        android:background="@drawable/button_style"
+        android:layout_margin="16dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <!-- כפתור יציאה -->
     <Button
