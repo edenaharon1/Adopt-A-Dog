@@ -85,7 +85,7 @@
         android:id="@+id/passwordInput"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:hint="******"
+        android:hint="****"
         android:inputType="textPassword"
         android:background="@drawable/input_field"
         app:layout_constraintTop_toBottomOf="@id/passwordLabel"

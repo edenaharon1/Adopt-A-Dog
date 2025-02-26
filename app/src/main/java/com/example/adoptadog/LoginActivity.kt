@@ -24,7 +24,7 @@ class LoginActivity : AppCompatActivity() {
             val email = emailInput.text.toString()
             val password = passwordInput.text.toString()
             navigateToHomePage()
-           /* // בדיקת אם האימייל והסיסמה תקינים
+ /* // בדיקת אם האימייל והסיסמה תקינים
             if (validateLogin(email, password)) {
                 // פעולה עבור הכניסה של המשתמש (בהמשך - חיבור ל-Firebase)
                 // התחברות עם Firebase
@@ -35,6 +35,7 @@ class LoginActivity : AppCompatActivity() {
             }
             */
 
+
         }
 
         signInButton.setOnClickListener {
@@ -44,9 +45,11 @@ class LoginActivity : AppCompatActivity() {
 
     //פונקציית העברה מדף הlogin to homepage
     private fun navigateToHomePage() {
+
             val intent = Intent(this, homePageActivity::class.java)
             startActivity(intent)
             finish()
+
     }
 
     // פונקציה לאימות דואר אלקטרוני
