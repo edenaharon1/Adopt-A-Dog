@@ -17,12 +17,8 @@ class homePageActivity : AppCompatActivity() {
         val profileIcon: ImageView = findViewById(R.id.profileIcon)
         val logoutButton: Button = findViewById(R.id.logoutButton)
 
-        // מעבר לדף הפרופיל בלחיצה על האייקון
         profileIcon.setOnClickListener {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, ProfileFragment())
-                .addToBackStack(null)
-                .commit()
+            showProfileFragment() // קריאה לפונקציה showProfileFragment
         }
 
         // יציאה מהחשבון בלחיצה על כפתור "Log Out"
@@ -39,4 +35,16 @@ class homePageActivity : AppCompatActivity() {
             insets
         }
     }
+
+    private fun showProfileFragment() {
+            val profileFragment = ProfileFragment() // יצירת מופע של ProfileFragment
+
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, profileFragment) // החלפת הפרגמנט בתוך fragmentContainer
+                .addToBackStack(null) // אופציונלי: מאפשר חזרה לפרגמנט הקודם
+                .commit()
+
+    }
+
+
 }
