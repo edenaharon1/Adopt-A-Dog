@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <View
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/light_orange"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-    <!-- רקע חום מלא -->
-    <item android:drawable="@color/brown"/>
-
-    <!-- רקע לבן באמצע -->
-    <item>
-        <shape android:shape="rectangle">
-            <gradient
-                android:type="linear"
-                android:angle="90"
-                android:startColor="@color/brown"
-                android:centerColor="@color/white"
-                android:centerY="0.5"
-                android:endColor="@color/brown"/>
-        </shape>
-    </item>
+    <!-- סרגל תחתון חום כהה יותר -->
+    <View
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/light_orange"
+        app:layout_constraintBottom_toBottomOf="parent"/
+  
 
 </layer-list>
