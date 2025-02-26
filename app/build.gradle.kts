@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("com.google.gms.google-services")
+    id("com.google.gms.google-services")  // הוספנו את התוסף של Google services כאן
 }
 
 android {
@@ -46,22 +46,20 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    dependencies {
-        implementation(platform("com.google.firebase:firebase-bom:31.0.0"))  // Firebase BOM
-        implementation("com.google.firebase:firebase-auth")   // Firebase Authentication
-        implementation("com.google.firebase:firebase-firestore")  // Firebase Firestore
-        implementation("com.google.firebase:firebase-storage")  // Firebase Storage
-    }
+    // Firebase BOM - מאפשר לנהל את גרסאות Firebase בצורה פשוטה
+    implementation(platform("com.google.firebase:firebase-bom:31.0.0"))
 
+    // Firebase Dependencies
+    implementation("com.google.firebase:firebase-auth")   // Firebase Authentication
+    implementation("com.google.firebase:firebase-firestore")  // Firebase Firestore
+    implementation("com.google.firebase:firebase-storage")  // Firebase Storage
 
     // Design
-    implementation ("com.google.android.material:material:1.8.0")
+    implementation("com.google.android.material:material:1.8.0")
 
     // Google Maps
-    implementation ("com.google.android.gms:play-services-maps:18.0.2")
+    implementation("com.google.android.gms:play-services-maps:18.0.2")
 
     // API data fetching
-    implementation ("com.android.volley:volley:1.2.1")
+    implementation("com.android.volley:volley:1.2.1")
 }
-
-
