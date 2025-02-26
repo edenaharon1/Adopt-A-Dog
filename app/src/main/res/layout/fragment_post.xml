@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".fragments.PostFragment">
+
+    <!-- סרגל עליון -->
+    <View
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/brown"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <!-- כפתור חזרה -->
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="back"
+        android:background="@drawable/button_style"
+        android:textColor="@color/white"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/topBar"
+        android:layout_margin="16dp"/>
+
+    <!-- אייקון פרופיל -->
+    <ImageView
+        android:id="@+id/profileIcon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_profile"
+        android:scaleType="centerInside"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/topBar"
+        android:layout_margin="16dp"/>
+
+    <!-- כותרת -->
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Adopt A Dog"
+        android:textSize="22sp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/topBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
+
+    <!-- תמונת הכלב -->
+    <ImageView
+        android:id="@+id/dogImage"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:scaleType="centerCrop"
+        android:background="@color/brown"
+        android:src="@drawable/doglogo"
+        app:layout_constraintTop_toBottomOf="@id/titleText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <!-- לייק -->
+    <ImageView
+        android:id="@+id/likeIcon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/empty_heart"
+        app:layout_constraintTop_toBottomOf="@id/dogImage"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/likeCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="584"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintTop_toTopOf="@id/likeIcon"
+        app:layout_constraintStart_toEndOf="@id/likeIcon"
+        android:layout_marginStart="8dp"/>
+
+    <!-- כפתור אמץ עכשיו -->
+    <Button
+        android:id="@+id/adoptNowButton"
+        android:layout_width="110dp"
+        android:layout_height="79dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/adopt_icon"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="8dp"
+        android:text="Adopt now!"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/likeIcon" />
+
+    <!-- אזור תגובות -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/likeIcon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp">
+
+        <LinearLayout
+            android:id="@+id/commentsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
+    </ScrollView>
+
+    <!-- תיבת הזנת תגובה -->
+    <EditText
+        android:id="@+id/commentInput"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:hint="Add comment..."
+        android:inputType="text"
+        android:background="@drawable/input_field"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/sendCommentButton"
+        android:layout_margin="16dp"/>
+
+    <!-- כפתור שליחת תגובה -->
+    <Button
+        android:id="@+id/sendCommentButton"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:text="Send"
+        android:background="@drawable/button_style"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp"/>
+
+    <!-- סרגל תחתון -->
+    <View
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/brown"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
