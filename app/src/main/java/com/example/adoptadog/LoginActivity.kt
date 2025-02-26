@@ -24,16 +24,17 @@ class LoginActivity : AppCompatActivity() {
             val email = emailInput.text.toString()
             val password = passwordInput.text.toString()
             navigateToHomePage()
-            /* // בדיקת אם האימייל והסיסמה תקינים
-             if (validateLogin(email, password)) {
-                 // פעולה עבור הכניסה של המשתמש (בהמשך - חיבור ל-Firebase)
-                 // התחברות עם Firebase
-                 navigateToHomePage() // מעבר לדף הבית אם הלוג אין תקין
-             } else {
-                 // הצגת הודעת שגיאה אם הלוג אין לא תקין
-                 Toast.makeText(this, "אימייל או סיסמה לא תקינים", Toast.LENGTH_SHORT).show()
-             }
-             */
+ /* // בדיקת אם האימייל והסיסמה תקינים
+            if (validateLogin(email, password)) {
+                // פעולה עבור הכניסה של המשתמש (בהמשך - חיבור ל-Firebase)
+                // התחברות עם Firebase
+                navigateToHomePage() // מעבר לדף הבית אם הלוג אין תקין
+            } else {
+                // הצגת הודעת שגיאה אם הלוג אין לא תקין
+                Toast.makeText(this, "אימייל או סיסמה לא תקינים", Toast.LENGTH_SHORT).show()
+            }
+            */
+
 
         }
 
@@ -44,9 +45,11 @@ class LoginActivity : AppCompatActivity() {
 
     //פונקציית העברה מדף הlogin to homepage
     private fun navigateToHomePage() {
-        val intent = Intent(this, homePageActivity::class.java)
-        startActivity(intent)
-        finish()
+
+            val intent = Intent(this, homePageActivity::class.java)
+            startActivity(intent)
+            finish()
+
     }
 
     // פונקציה לאימות דואר אלקטרוני

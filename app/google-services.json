@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "969772583539",
-    "project_id": "adopt-a-dog-e41c4",
-    "storage_bucket": "adopt-a-dog-e41c4.firebasestorage.app"
+    "project_number": "717283000501",
+    "project_id": "adoptadog-1",
+    "storage_bucket": "adoptadog-1.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:969772583539:android:441135599c1749a0b13806",
+        "mobilesdk_app_id": "1:717283000501:android:63a85095ce583034e77efc",
         "android_client_info": {
           "package_name": "com.example.adoptadog"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAuv2NN5KZCp7kjyjw_n3v72shUC-EGEy8"
+          "current_key": "AIzaSyAJrrjA29bGLgZUsxplUbxsROyYBmFcY-g"
         }
       ],
       "services": {
