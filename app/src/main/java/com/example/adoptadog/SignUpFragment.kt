@@ -17,11 +17,12 @@ class SignUpFragment : Fragment() {
 
     private lateinit var mAuth: FirebaseAuth
 
-    override fun onCreateView(git branch
-
-                              inflater: LayoutInflater, container: ViewGroup?,
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_sign_up, container, false)
 
