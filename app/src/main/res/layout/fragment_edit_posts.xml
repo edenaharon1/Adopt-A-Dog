@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".fragment_edit_posts">
+    tools:context="com.example.adoptadog.fragments.EditPostsFragment">
 
     <!-- סרגל עליון כתום -->
     <View

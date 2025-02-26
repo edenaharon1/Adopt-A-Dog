@@ -51,6 +51,11 @@ dependencies {
         implementation("com.google.firebase:firebase-auth")   // Firebase Authentication
         implementation("com.google.firebase:firebase-firestore")  // Firebase Firestore
         implementation("com.google.firebase:firebase-storage")  // Firebase Storage
+
+
+        implementation("androidx.navigation:navigation-fragment-ktx:2.7.5") //תוספים של ה nav graph 
+        implementation("androidx.navigation:navigation-ui-ktx:2.7.5")
+
     }
 
 

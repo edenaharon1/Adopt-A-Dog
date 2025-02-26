@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".ProfileFragment">
+    tools:context=".FragmentProfile">
 
     <!-- כפתור יציאה בצד שמאל למעלה -->
     <Button
@@ -124,16 +124,7 @@
             android:textStyle="bold"
             android:padding="12dp"/>
 
-        <Button
-            android:id="@+id/editPostsAgainButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Edit posts"
-            android:background="@android:color/transparent"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:padding="12dp"/>
+
 
         <!-- כפתור חזרה לעמוד הראשי -->
         <Button

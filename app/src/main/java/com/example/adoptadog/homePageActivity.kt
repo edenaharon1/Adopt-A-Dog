@@ -37,7 +37,7 @@ class homePageActivity : AppCompatActivity() {
     }
 
     private fun showProfileFragment() {
-            val profileFragment = ProfileFragment() // יצירת מופע של ProfileFragment
+            val profileFragment = FragmentProfile() // יצירת מופע של ProfileFragment
 
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, profileFragment) // החלפת הפרגמנט בתוך fragmentContainer

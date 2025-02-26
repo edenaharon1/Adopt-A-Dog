@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.adoptadog.R
+import androidx.navigation.fragment.findNavController
 
 class EditPostsFragment : Fragment() {
     override fun onCreateView(

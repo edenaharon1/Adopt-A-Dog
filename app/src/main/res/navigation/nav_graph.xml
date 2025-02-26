@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/fragmentProfile2">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="override fun onCreateView(&#xA;    inflater: LayoutInflater, container: ViewGroup?,&#xA;    savedInstanceState: Bundle?&#xA;): View? {&#xA;    // Inflate the layout for this fragment&#xA;    return inflater.inflate(R.layout.fragment_profile, container, false)&#xA;}" />
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Profile" />
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Profile" />
+    <fragment
+        android:id="@+id/editPostsFragment"
+        android:name="com.example.adoptadog.fragments.EditPostsFragment"
+        android:label="fragment_edit_posts"
+        tools:layout="@layout/fragment_edit_posts" />
+    <fragment
+        android:id="@+id/fragmentProfile2"
+        android:name="com.example.adoptadog.FragmentProfile"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profile_to_edit_posts"
+            app:destination="@id/editPostsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentSignUp2"
+        android:name="com.example.adoptadog.FragmentSignUp"
+        android:label="fragment_sign_up"
+        tools:layout="@layout/fragment_sign_up" />
+</navigation>
