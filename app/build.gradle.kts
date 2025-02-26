@@ -1,8 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services")
 }
-
 
 android {
     namespace = "com.example.adoptadog"
@@ -37,7 +37,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -47,19 +46,22 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    //firebase
-    //implementation(libs.firebase.bom.v2841)
-   // implementation("com.google.firebase:firebase-analytics")
+    dependencies {
+        implementation(platform("com.google.firebase:firebase-bom:31.0.0"))  // Firebase BOM
+        implementation("com.google.firebase:firebase-auth")   // Firebase Authentication
+        implementation("com.google.firebase:firebase-firestore")  // Firebase Firestore
+        implementation("com.google.firebase:firebase-storage")  // Firebase Storage
+    }
 
-    //design
+
+    // Design
     implementation ("com.google.android.material:material:1.8.0")
 
-    //google maps
+    // Google Maps
     implementation ("com.google.android.gms:play-services-maps:18.0.2")
 
-    //שליפת נתונים מ rest api
+    // API data fetching
     implementation ("com.android.volley:volley:1.2.1")
-
-
-
 }
+
+
