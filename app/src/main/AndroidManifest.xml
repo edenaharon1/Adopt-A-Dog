@@ -3,9 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.adoptadog">
 
-
-
-<application
+    <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -16,16 +14,19 @@
         android:theme="@style/Theme.AdoptADog"
         tools:targetApi="31">
         <activity
-            android:name=".homePageActivity">
+            android:name=".NavHostActivity"
+            android:exported="true">
 
         </activity>
         <activity
             android:name=".LoginActivity"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.DEFAULT" />
             </intent-filter>
         </activity>
     </application>

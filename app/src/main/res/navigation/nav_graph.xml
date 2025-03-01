@@ -3,39 +3,48 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/fragmentProfile2">
+    app:startDestination="@id/homePageFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="override fun onCreateView(&#xA;    inflater: LayoutInflater, container: ViewGroup?,&#xA;    savedInstanceState: Bundle?&#xA;): View? {&#xA;    // Inflate the layout for this fragment&#xA;    return inflater.inflate(R.layout.fragment_profile, container, false)&#xA;}" />
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Profile" />
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Profile" />
     <fragment
         android:id="@+id/editPostsFragment"
         android:name="com.example.adoptadog.fragments.EditPostsFragment"
         android:label="fragment_edit_posts"
-        tools:layout="@layout/fragment_edit_posts" />
+        tools:layout="@layout/fragment_edit_posts" >
+        <action
+            android:id="@+id/action_editPostsFragment_to_FragmentProfile"
+            app:destination="@id/FragmentProfile" />
+    </fragment>
+
     <fragment
-        android:id="@+id/fragmentProfile2"
-        android:name="com.example.adoptadog.FragmentProfile"
+        android:id="@+id/FragmentProfile"
+        android:name="com.example.adoptadog.fragments.FragmentProfile"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" >
+        tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profile_to_edit_posts"
             app:destination="@id/editPostsFragment" />
+        <action
+            android:id="@+id/action_FragmentProfile_to_homePageFragment"
+            app:destination="@id/homePageFragment" />
     </fragment>
+
     <fragment
-        android:id="@+id/fragmentSignUp2"
+        android:id="@+id/fragmentSignUp"
         android:name="com.example.adoptadog.FragmentSignUp"
         android:label="fragment_sign_up"
-        tools:layout="@layout/fragment_sign_up" />
+        tools:layout="@layout/fragment_sign_up">
+
+        <action
+            android:id="@+id/action_fragmentSignUp_to_homePageFragment"
+            app:destination="@id/homePageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homePageFragment"
+        android:name="com.example.adoptadog.fragments.HomePageFragment"
+        android:label="HomePageFragment" >
+        <action
+            android:id="@+id/action_homePageFragment_to_FragmentProfile"
+            app:destination="@id/FragmentProfile" />
+    </fragment>
+
 </navigation>

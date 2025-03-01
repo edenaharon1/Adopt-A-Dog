@@ -1,25 +1,36 @@
-package com.example.adoptadog
+package com.example.adoptadog.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.adoptadog.R
 
-class FragmentProfile : Fragment(R.layout.fragment_profile) {
+class FragmentProfile : Fragment(R.layout.fragment_profile) { // וודא שזה שם הפרגמנט שלך
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // קבלת הכפתור editPosts
-        val editPostsButton: Button = view.findViewById(R.id.editPostsButton) // ודא שזה ה-ID הנכון של הכפתור שלך.
+        // מציאת הכפתור
+        val editPostsButton: Button = view.findViewById(R.id.editPostsButton)
+        val returnToHP: Button = view.findViewById(R.id.backToHomeButton)
 
-        // הוספת מאזין לחיצה
+        // הגדרת הלחיצה
         editPostsButton.setOnClickListener {
-            // ניווט לפרגמנט עריכת הפוסטים דרך ה-NavController וה-Action שיצרת ב-NavGraph
-            findNavController().navigate(R.id.action_profile_to_edit_posts) // ודא שזה ה-ID של ה-Action שלך ב-NavGraph
+            // קבלת ה-NavController
+            val navController = findNavController()
+
+            // ביצוע המעבר באמצעות ה-Action שהגדרת ב-NavGraph
+            navController.navigate(R.id.action_profile_to_edit_posts)
+        }
+
+        returnToHP.setOnClickListener {
+            // קבלת ה-NavController
+            val navController = findNavController()
+
+            // ביצוע המעבר באמצעות ה-Action שהגדרת ב-NavGraph
+            navController.navigate(R.id.action_FragmentProfile_to_homePageFragment)
         }
     }
 }

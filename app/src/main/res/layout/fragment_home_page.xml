@@ -9,7 +9,6 @@
     android:background="@color/white"
     tools:context=".homePageActivity">
 
-    <!-- סרגל עליון חום בהיר -->
     <View
         android:id="@+id/topBar"
         android:layout_width="match_parent"
@@ -17,7 +16,6 @@
         android:background="@color/light_orange"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <!-- סרגל תחתון חום כהה יותר -->
     <View
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"
@@ -25,7 +23,6 @@
         android:background="@color/light_orange"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <!-- כפתור יציאה -->
     <Button
         android:id="@+id/logoutButton"
         android:layout_width="wrap_content"
@@ -40,7 +37,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/topBar" />
 
-    <!-- אייקון פרופיל -->
     <ImageView
         android:id="@+id/profileIcon"
         android:layout_width="40dp"
@@ -50,10 +46,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/topBar"
         android:layout_margin="16dp"/>
-
-    <!-- כותרת המסך -->
-
-    <!-- אזור הצגת פרגמנטים -->
 
     <TextView
         android:id="@+id/titleText"
@@ -68,15 +60,5 @@
         app:layout_constraintHorizontal_bias="0.454"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/topBar" />
-
-    <FrameLayout
-        android:id="@+id/fragmentContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
