@@ -1,0 +1,27 @@
+[33mfdbcb13[m[33m ([m[1;36mHEAD -> [m[1;32meden[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m HEAD@{0}: reset: moving to origin/master
+[33mc530a13[m[33m ([m[1;31morigin/eden[m[33m)[m HEAD@{1}: commit: sql-room
+[33mfdbcb13[m[33m ([m[1;36mHEAD -> [m[1;32meden[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m HEAD@{2}: reset: moving to origin/master
+[33mf30706c[m HEAD@{3}: commit: dao, entities folders - room
+[33m96a7fbd[m HEAD@{4}: commit: end nav graph start room
+[33m75d9de8[m HEAD@{5}: checkout: moving from master to eden
+[33mfdbcb13[m[33m ([m[1;36mHEAD -> [m[1;32meden[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m HEAD@{6}: checkout: moving from eden to master
+[33m75d9de8[m HEAD@{7}: commit: nav graph
+[33mfdbcb13[m[33m ([m[1;36mHEAD -> [m[1;32meden[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m HEAD@{8}: checkout: moving from master to eden
+[33mfdbcb13[m[33m ([m[1;36mHEAD -> [m[1;32meden[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m HEAD@{9}: checkout: moving from eden to master
+[33mfdbcb13[m[33m ([m[1;36mHEAD -> [m[1;32meden[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m HEAD@{10}: checkout: moving from master to eden
+[33mfdbcb13[m[33m ([m[1;36mHEAD -> [m[1;32meden[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m HEAD@{11}: checkout: moving from eden to master
+[33mfdbcb13[m[33m ([m[1;36mHEAD -> [m[1;32meden[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m HEAD@{12}: merge master: Fast-forward
+[33mf47acae[m HEAD@{13}: checkout: moving from master to eden
+[33mfdbcb13[m[33m ([m[1;36mHEAD -> [m[1;32meden[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m HEAD@{14}: commit: nav graph + buttons
+[33ma3a693d[m HEAD@{15}: commit: new fragments + nav graph
+[33mb57a982[m HEAD@{16}: pull origin master: Fast-forward
+[33m17f4481[m HEAD@{17}: checkout: moving from eden to master
+[33mf47acae[m HEAD@{18}: checkout: moving from master to eden
+[33m17f4481[m HEAD@{19}: checkout: moving from eden to master
+[33mf47acae[m HEAD@{20}: commit: login functions
+[33ma0eab83[m HEAD@{21}: pull origin master: Fast-forward
+[33md964597[m HEAD@{22}: checkout: moving from eden to eden
+[33md964597[m HEAD@{23}: checkout: moving from eden to eden
+[33md964597[m HEAD@{24}: commit: login xml
+[33m17f4481[m HEAD@{25}: checkout: moving from master to eden
+[33m17f4481[m HEAD@{26}: clone: from https://github.com/edenaharon1/Adopt-A-Dog.git

@@ -124,6 +124,17 @@
             android:textStyle="bold"
             android:padding="12dp"/>
 
+        <Button
+            android:id="@+id/uploadPostButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Upload Post"
+            android:background="@android:color/transparent"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:padding="12dp"/>
+
 
 
         <!-- כפתור חזרה לעמוד הראשי -->
