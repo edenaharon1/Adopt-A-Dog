@@ -30,17 +30,6 @@
         app:layout_constraintTop_toTopOf="@id/topBar"
         android:layout_margin="16dp"/>
 
-    <!-- 🔹 אייקון פרופיל -->
-    <ImageView
-        android:id="@+id/profileIcon"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/ic_profile"
-        android:scaleType="centerInside"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/topBar"
-        android:layout_margin="16dp"/>
-
     <!-- 🔹 אזור תמונה למרכז המסך -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewImage"

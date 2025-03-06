@@ -15,6 +15,12 @@ class FragmentProfile : Fragment(R.layout.fragment_profile) { // וודא שזה
         // מציאת הכפתור
         val editPostsButton: Button = view.findViewById(R.id.editPostsButton)
         val returnToHP: Button = view.findViewById(R.id.backToHomeButton)
+        val uploadPostButton = view.findViewById<Button>(R.id.uploadPostButton)
+
+        uploadPostButton.setOnClickListener {
+            findNavController().navigate(R.id.action_FragmentProfile_to_uploadPostFragment)
+        }
+
 
         // הגדרת הלחיצה
         editPostsButton.setOnClickListener {
