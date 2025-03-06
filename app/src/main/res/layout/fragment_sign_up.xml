@@ -8,7 +8,6 @@
     android:background="@color/dark_orange"
     tools:context="com.example.adoptadog.FragmentSignUp">
 
-    <!-- לוגו -->
     <ImageView
         android:id="@+id/logoImage"
         android:layout_width="200dp"
@@ -19,7 +18,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- כותרת ראשית -->
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
@@ -33,7 +31,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/logoImage" />
 
-    <!-- כותרת כניסה -->
     <TextView
         android:id="@+id/loginTitle"
         android:layout_width="wrap_content"
@@ -46,7 +43,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title" />
 
-    <!-- תווית אימייל -->
     <TextView
         android:id="@+id/emailLabel"
         android:layout_width="wrap_content"
@@ -59,7 +55,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/loginTitle" />
 
-    <!-- שדה קלט אימייל -->
     <EditText
         android:id="@+id/emailInput"
         android:layout_width="0dp"
@@ -73,7 +68,6 @@
         android:layout_marginTop="4dp"
         android:layout_marginHorizontal="32dp"/>
 
-    <!-- תווית סיסמה -->
     <TextView
         android:id="@+id/passwordLabel"
         android:layout_width="wrap_content"
@@ -86,7 +80,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/emailInput" />
 
-    <!-- שדה קלט סיסמה -->
     <EditText
         android:id="@+id/passwordInput"
         android:layout_width="0dp"
@@ -100,7 +93,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/passwordLabel" />
 
-    <!-- תווית שם משתמש -->
     <TextView
         android:id="@+id/nameLabel"
         android:layout_width="wrap_content"
@@ -113,7 +105,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/passwordInput" />
 
-    <!-- שדה קלט שם משתמש -->
     <EditText
         android:id="@+id/nameInput"
         android:layout_width="0dp"
@@ -127,7 +118,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/nameLabel" />
 
-    <!-- כפתור כניסה -->
     <Button
         android:id="@+id/loginButton"
         android:layout_width="0dp"
@@ -141,7 +131,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/nameInput" />
 
-    <!-- קישור להירשמות -->
     <TextView
         android:id="@+id/signupLink"
         android:layout_width="wrap_content"
@@ -154,6 +143,7 @@
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/loginButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

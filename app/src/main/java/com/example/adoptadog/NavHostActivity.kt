@@ -5,8 +5,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
-
+import androidx.navigation.fragment.NavHostFragment
 
 class NavHostActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,11 +21,14 @@ class NavHostActivity : AppCompatActivity() {
         }
 
         val openSignUp = intent.getBooleanExtra("openSignUpFragment", false)
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
 
-        // אם יש את הדגל של "openSignUpFragment", ננווט ל-FragmentSignUp
         if (openSignUp) {
-            findNavController(R.id.nav_host_fragment).navigate(R.id.fragmentSignUp)
+            lifecycleScope.launchWhenResumed {
+                if (navHostFragment.view != null) {
+                    findNavController(R.id.nav_host_fragment).navigate(R.id.fragmentSignUp)
+                }
+            }
         }
     }
 }
-
