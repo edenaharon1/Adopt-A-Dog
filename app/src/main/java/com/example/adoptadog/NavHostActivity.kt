@@ -5,7 +5,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.findNavController
+
 
 class NavHostActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,12 +19,12 @@ class NavHostActivity : AppCompatActivity() {
             insets
         }
 
-        // הגדרת NavHostFragment (לא נחוץ כאן, אבל מומלץ לוודא שה-NavHostFragment קיים)
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
+        val openSignUp = intent.getBooleanExtra("openSignUpFragment", false)
 
-        // כאן תוכל להוסיף קוד נוסף אם יש צורך, למשל:
-        // - הגדרת BottomNavigationView
-        // - טיפול בפעולות ניווט כלליות
+        // אם יש את הדגל של "openSignUpFragment", ננווט ל-FragmentSignUp
+        if (openSignUp) {
+            findNavController(R.id.nav_host_fragment).navigate(R.id.fragmentSignUp)
+        }
     }
 }
+

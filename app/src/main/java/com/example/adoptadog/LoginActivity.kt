@@ -12,16 +12,23 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.login_activity)
 
         val loginButton = findViewById<Button>(R.id.loginButton)
+        val signInButton = findViewById<Button>(R.id.sign_in)
 
         loginButton.setOnClickListener {
-            navigateToNavHostActivity() // מעבר ישירות ל-NavHostActivity
+            // ניווט רגיל ל-NavHostActivity (יפתח את ה-start destination)
+            navigateToNavHostActivity(false)
+        }
+
+        signInButton.setOnClickListener {
+            // ניווט ל-NavHostActivity עם דגל לפתיחת FragmentSignUp
+            navigateToNavHostActivity(true)
         }
     }
 
-    // פונקציית העברה מדף הlogin ל-NavHostActivity
-    private fun navigateToNavHostActivity() {
+    private fun navigateToNavHostActivity(openSignUp: Boolean) {
         val intent = Intent(this, NavHostActivity::class.java)
+        intent.putExtra("openSignUpFragment", openSignUp)
         startActivity(intent)
-        finish() // לסיים את הפעילות הנוכחית כך שלא ניתן לחזור אליה על ידי כפתור Back
+        finish()
     }
 }
