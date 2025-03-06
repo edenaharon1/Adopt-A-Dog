@@ -26,6 +26,9 @@
         <action
             android:id="@+id/action_FragmentProfile_to_homePageFragment"
             app:destination="@id/homePageFragment" />
+        <action
+            android:id="@+id/action_FragmentProfile_to_uploadPostFragment"
+            app:destination="@id/uploadPostFragment" />
     </fragment>
 
     <fragment
@@ -45,6 +48,17 @@
         <action
             android:id="@+id/action_homePageFragment_to_FragmentProfile"
             app:destination="@id/FragmentProfile" />
+        <action
+            android:id="@+id/action_homePageFragment_to_uploadPostFragment"
+            app:destination="@id/uploadPostFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/uploadPostFragment"
+        android:name="com.example.adoptadog.UploadPostFragment"
+        android:label="UploadPostFragment" >
+        <action
+            android:id="@+id/action_uploadPostFragment_to_homePageFragment"
+            app:destination="@id/homePageFragment" />
     </fragment>
 
 </navigation>

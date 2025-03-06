@@ -40,6 +40,8 @@ class HomePageFragment : Fragment() {
         // חיבור הכפתורים מה-XML
         val profileIcon = view.findViewById<ImageView>(R.id.profileIcon)
         val logoutButton: Button = view.findViewById(R.id.logoutButton)
+        val addPostButton: Button = view.findViewById(R.id.addPostButton) // הוספת כפתור הפלוס
+
 
         // הגדרת הלחיצה על האייקון - ניווט לפרגמנט פרופיל
         profileIcon.setOnClickListener {
@@ -52,6 +54,14 @@ class HomePageFragment : Fragment() {
             startActivity(intent)
             requireActivity().finish()
         }
+
+        // הגדרת הלחיצה על כפתור הפלוס - ניווט לפרגמנט העלאת פוסט
+        addPostButton.setOnClickListener {
+            navController.navigate(R.id.action_homePageFragment_to_uploadPostFragment)
+        }
+//        backtohomepage.setOnClickListener {
+//            navController.navigate(R.id.action_uploadPostFragment_to_homePageFragment)
+//        }
 
         recyclerView = view.findViewById(R.id.recyclerViewPosts)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2) // שינוי ל-GridLayoutManager ו-requireContext()

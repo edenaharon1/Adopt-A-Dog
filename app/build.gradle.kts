@@ -50,6 +50,10 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+//nav graph
+    val nav_version = "2.5.3" // או הגרסה העדכנית ביותר
+    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
+    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
 
         implementation(platform("com.google.firebase:firebase-bom:31.0.0"))  // Firebase BOM
         implementation("com.google.firebase:firebase-auth")   // Firebase Authentication
