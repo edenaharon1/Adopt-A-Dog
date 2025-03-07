@@ -8,6 +8,8 @@
     android:background="@color/white"
     tools:context=".FragmentProfile">
 
+    <include layout="@layout/base_layout"/>
+
     <!-- כפתור יציאה בצד שמאל למעלה -->
     <Button
         android:id="@+id/logoutButton"

@@ -3,7 +3,10 @@ package com.example.adoptadog
 import android.Manifest
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
@@ -27,7 +31,9 @@ import kotlinx.coroutines.withContext
 class UploadPostFragment : Fragment() {
 
     private lateinit var selectImageButton: Button
+    private lateinit var uploadPostButton: Button
     private lateinit var imagePreview: ImageView
+    private lateinit var progressBar: ProgressBar
     private lateinit var postTextEditText: EditText
     private lateinit var uploadNowButton: Button
     private var selectedImageUri: Uri? = null
@@ -35,8 +41,12 @@ class UploadPostFragment : Fragment() {
     private val pickImage =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             if (uri != null) {
+                startLoading()
                 selectedImageUri = uri
                 imagePreview.setImageURI(uri)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    stopLoading()
+                }, 1000)
             } else {
                 Log.e("UploadPostFragment", "No image selected")
             }
@@ -54,7 +64,9 @@ class UploadPostFragment : Fragment() {
 
         val backButton = view.findViewById<Button>(R.id.backButton)
         selectImageButton = view.findViewById(R.id.selectImageButton)
+        uploadPostButton = view.findViewById(R.id.uploadPostButton)
         imagePreview = view.findViewById(R.id.imagePreview)
+        progressBar = view.findViewById(R.id.progressBar)
         postTextEditText = view.findViewById(R.id.postDescription)
         uploadNowButton = view.findViewById(R.id.uploadPostButton)
 
@@ -62,7 +74,7 @@ class UploadPostFragment : Fragment() {
             findNavController().navigateUp()
         }
 
-        requestPermissions()
+        requestPermissionsIfNeeded() // קריאה לפונקציית בקשת ההרשאות
 
         selectImageButton.setOnClickListener {
             pickImage.launch("image/*")
@@ -77,6 +89,7 @@ class UploadPostFragment : Fragment() {
         val postText = postTextEditText.text.toString()
         val imageUri = selectedImageUri
         if (postText.isNotEmpty() && imageUri != null) {
+            startLoading()
             lifecycleScope.launch(Dispatchers.IO) {
                 try {
                     val post = Post(
@@ -89,14 +102,16 @@ class UploadPostFragment : Fragment() {
                     )
                     AppDatabase.getDatabase(requireContext(), lifecycleScope).postDao().insert(post)
                     withContext(Dispatchers.Main) {
-                        postTextEditText.text.clear() // ניקוי ה-EditText
-                        findNavController().navigateUp()
+                        postTextEditText.text.clear()
+                        stopLoading()
+                        findNavController().navigate(R.id.action_uploadPostFragment_to_homePageFragment)
                     }
                 } catch (e: Exception) {
-                    withContext(Dispatchers.Main){
+                    withContext(Dispatchers.Main) {
                         Toast.makeText(requireContext(), "שגיאה בהעלאת הפוסט", Toast.LENGTH_SHORT).show()
+                        Log.e("UploadPostFragment", "Error uploading post: ${e.message}")
+                        stopLoading()
                     }
-                    Log.e("UploadPostFragment", "Error uploading post: ${e.message}")
                 }
             }
         } else {
@@ -104,17 +119,31 @@ class UploadPostFragment : Fragment() {
         }
     }
 
-    private fun requestPermissions() {
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.READ_MEDIA_IMAGES
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(Manifest.permission.READ_MEDIA_IMAGES),
-                PERMISSION_REQUEST_CODE
-            )
+    private fun requestPermissionsIfNeeded() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.READ_MEDIA_IMAGES
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(Manifest.permission.READ_MEDIA_IMAGES),
+                    PERMISSION_REQUEST_CODE
+                )
+            }
+        } else {
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                    PERMISSION_REQUEST_CODE
+                )
+            }
         }
     }
 
@@ -126,11 +155,19 @@ class UploadPostFragment : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // הרשאה ניתנה
+                // Permission granted
             } else {
-                // הרשאה נדחתה
+                Toast.makeText(requireContext(), "הרשאה נדחתה", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun startLoading() {
+        progressBar.visibility = View.VISIBLE
+    }
+
+    private fun stopLoading() {
+        progressBar.visibility = View.GONE
     }
 
     companion object {

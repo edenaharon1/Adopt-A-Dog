@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.adoptadog.LoginActivity
+import com.example.adoptadog.NavHostActivity
 import com.example.adoptadog.R
 
 class FragmentProfile : Fragment(R.layout.fragment_profile) {
@@ -21,6 +22,8 @@ class FragmentProfile : Fragment(R.layout.fragment_profile) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // ✨ מציאת הכפתורים
+
         val editPostsButton: Button = view.findViewById(R.id.editPostsButton)
         val returnToHP: Button = view.findViewById(R.id.backToHomeButton)
         val uploadPostButton = view.findViewById<Button>(R.id.uploadPostButton)
@@ -29,24 +32,31 @@ class FragmentProfile : Fragment(R.layout.fragment_profile) {
         userNameText = view.findViewById<TextView>(R.id.userNameText)
         profileImageView = view.findViewById(R.id.profileImage)
 
+        // ✅ מעבר להעלאת פוסט
         uploadPostButton.setOnClickListener {
+            (activity as? NavHostActivity)?.startLoading()
             findNavController().navigate(R.id.action_FragmentProfile_to_uploadPostFragment)
         }
 
+        // ✅ מעבר לעריכת פוסטים
         editPostsButton.setOnClickListener {
-            val navController = findNavController()
-            navController.navigate(R.id.action_profile_to_edit_posts)
+            (activity as? NavHostActivity)?.startLoading()
+            findNavController().navigate(R.id.action_profile_to_edit_posts)
+
         }
 
+        // ✅ חזרה לעמוד הבית
+
         returnToHP.setOnClickListener {
-            val navController = findNavController()
-            navController.navigate(R.id.action_FragmentProfile_to_homePageFragment)
+            (activity as? NavHostActivity)?.startLoading()
+            findNavController().navigate(R.id.action_FragmentProfile_to_homePageFragment)
         }
 
         logoutButton.setOnClickListener {
             val intent = Intent(requireContext(), LoginActivity::class.java)
             startActivity(intent)
             requireActivity().finish()
+            (activity as? NavHostActivity)?.stopLoading() // הוספת עצירת ספינר טעינה
         }
 
         editProfileButton.setOnClickListener {

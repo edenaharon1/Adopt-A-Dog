@@ -17,14 +17,19 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager // שינוי כאן
 import androidx.recyclerview.widget.RecyclerView
 import com.example.adoptadog.LoginActivity
 import com.example.adoptadog.MyApplication
+import com.example.adoptadog.NavHostActivity
 import com.example.adoptadog.R
 import com.example.adoptadog.ui.HomeViewModel
 import com.example.adoptadog.ui.HomeViewModelFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HomePageFragment : Fragment() {
 
@@ -50,7 +55,9 @@ class HomePageFragment : Fragment() {
         val logoutButton: Button = view.findViewById(R.id.logoutButton)
         val addPostButton: Button = view.findViewById(R.id.addPostButton)
 
+
         profileIcon.setOnClickListener {
+            (activity as? NavHostActivity)?.startLoading()
             navController.navigate(R.id.FragmentProfile)
         }
 
@@ -61,11 +68,15 @@ class HomePageFragment : Fragment() {
         }
 
         addPostButton.setOnClickListener {
+            (activity as? NavHostActivity)?.startLoading()
             navController.navigate(R.id.action_homePageFragment_to_uploadPostFragment)
         }
 
-        recyclerView = view.findViewById(R.id.postsRecyclerView)
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), 2) // שינוי כאן
+recyclerView = view.findViewById(R.id.postsRecyclerView);
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), 2) // שימוש ב-GridLayoutManager עם 2 עמודות
+
+val database = (requireActivity().application as MyApplication).database;
+val postDao = database.postDao();
 
         adapter = PostAdapter(mutableListOf()) { post ->
             // כאן תוסיף את הקוד שיעביר לפרגמנט אחר
@@ -73,9 +84,6 @@ class HomePageFragment : Fragment() {
         }
 
         recyclerView.adapter = adapter
-
-        // יצירת ViewModel
-        val database = (requireActivity().application as MyApplication).database
         val factory = HomeViewModelFactory(database)
         viewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
 
@@ -107,15 +115,29 @@ class HomePageFragment : Fragment() {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == READ_MEDIA_IMAGES_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Log.d("HomePageFragment", "Permissions granted")
+                // לאחר קבלת הרשאות, טען את הפוסטים
+                val database = (requireActivity().application as MyApplication).database
+                val postDao = database.postDao()
+                loadPosts(postDao)
             } else {
                 Log.d("HomePageFragment", "Permissions denied")
                 Toast.makeText(requireContext(), "Permissions denied", Toast.LENGTH_SHORT).show()
             }
         }
     }
-}
+
+    private fun loadPosts(postDao: com.example.adoptadog.database.PostDao) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val posts = postDao.getAllPosts()
+            withContext(Dispatchers.Main) {
+                adapter.updatePosts(posts)
+                (activity as? NavHostActivity)?.stopLoading() // עצור ספינר לאחר טעינת פוסטים
+            }
+        }
+    }
+        }
