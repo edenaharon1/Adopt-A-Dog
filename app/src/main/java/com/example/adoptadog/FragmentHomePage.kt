@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.adoptadog.LoginActivity
 import com.example.adoptadog.MyApplication
+import com.example.adoptadog.NavHostActivity
 import com.example.adoptadog.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -41,7 +42,9 @@ class HomePageFragment : Fragment() {
         val logoutButton: Button = view.findViewById(R.id.logoutButton)
         val addPostButton: Button = view.findViewById(R.id.addPostButton)
 
+
         profileIcon.setOnClickListener {
+            (activity as? NavHostActivity)?.startLoading()
             navController.navigate(R.id.FragmentProfile)
         }
 
@@ -52,8 +55,10 @@ class HomePageFragment : Fragment() {
         }
 
         addPostButton.setOnClickListener {
+            (activity as? NavHostActivity)?.startLoading()
             navController.navigate(R.id.action_homePageFragment_to_uploadPostFragment)
         }
+
 
         recyclerView = view.findViewById(R.id.postsRecyclerView) // שימוש ב-postsRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext()) // שימוש ב-LinearLayoutManager
@@ -74,9 +79,10 @@ class HomePageFragment : Fragment() {
     private fun loadPosts(postDao: com.example.adoptadog.database.PostDao) {
         lifecycleScope.launch(Dispatchers.IO) {
             val posts = postDao.getAllPosts()
-            withContext(Dispatchers.Main) {
-                adapter.updatePosts(posts)
-            }
+withContext(Dispatchers.Main) {
+    adapter.updatePosts(posts)
+    (activity as? NavHostActivity)?.stopLoading() // עצור ספינר לאחר טעינת פוסטים
+}
         }
     }
 }
