@@ -1,10 +1,11 @@
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.adoptadog.R
 import com.example.adoptadog.database.Post
+import com.squareup.picasso.Picasso
 
 class PostAdapter(
     private var posts: MutableList<Post>,
@@ -12,8 +13,7 @@ class PostAdapter(
 ) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val titleTextView: TextView = itemView.findViewById(R.id.postTitle)
-        val contentTextView: TextView = itemView.findViewById(R.id.postContent)
+        val postImageView: ImageView = itemView.findViewById(R.id.postImageView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
@@ -24,8 +24,11 @@ class PostAdapter(
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val currentPost = posts[position]
-        holder.titleTextView.text = currentPost.title
-        holder.contentTextView.text = currentPost.content
+
+        // טעינת תמונה עם Picasso
+        Picasso.get()
+            .load(currentPost.imageUrl)
+            .into(holder.postImageView)
 
         holder.itemView.setOnClickListener {
             onItemClick(currentPost)

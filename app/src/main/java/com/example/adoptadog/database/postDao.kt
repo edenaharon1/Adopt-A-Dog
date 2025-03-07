@@ -1,9 +1,10 @@
 package com.example.adoptadog.database
-import androidx.room.*
-import androidx.room.Dao;
-import androidx.room.Insert;
-import androidx.room.Query;
 
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 
 @Dao
 interface PostDao {
@@ -15,4 +16,10 @@ interface PostDao {
 
     @Delete
     suspend fun delete(post: Post)
+
+    @Query("UPDATE posts SET likes = :likes WHERE id = :postId")
+    suspend fun updateLikes(postId: Long, likes: List<String>)
+
+    @Query("UPDATE posts SET comments = :comments WHERE id = :postId")
+    suspend fun updateComments(postId: Long, comments: List<Comment>)
 }
