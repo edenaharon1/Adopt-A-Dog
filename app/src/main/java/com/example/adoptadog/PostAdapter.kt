@@ -19,6 +19,15 @@ class PostAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.post_item, parent, false)
+
+        // חישוב גודל הפריט
+        val displayMetrics = parent.context.resources.displayMetrics
+        val itemWidth = displayMetrics.widthPixels / 2 // 2 טורים
+        val layoutParams = itemView.layoutParams
+        layoutParams.width = itemWidth
+        layoutParams.height = itemWidth
+        itemView.layoutParams = layoutParams
+
         return PostViewHolder(itemView)
     }
 
@@ -28,6 +37,8 @@ class PostAdapter(
         // טעינת תמונה עם Picasso
         Picasso.get()
             .load(currentPost.imageUrl)
+            .fit() // התאמת התמונה למסגרת
+            .centerCrop() // חיתוך התמונה למילוי המסגרת
             .into(holder.postImageView)
 
         holder.itemView.setOnClickListener {

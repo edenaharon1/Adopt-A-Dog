@@ -1,29 +1,38 @@
 package com.example.adoptadog.fragments
 
 import PostAdapter
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager // שינוי כאן
 import androidx.recyclerview.widget.RecyclerView
 import com.example.adoptadog.LoginActivity
 import com.example.adoptadog.MyApplication
 import com.example.adoptadog.R
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.example.adoptadog.ui.HomeViewModel
+import com.example.adoptadog.ui.HomeViewModelFactory
 
 class HomePageFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: PostAdapter
+    private lateinit var viewModel: HomeViewModel
+
+    private val READ_MEDIA_IMAGES_REQUEST_CODE = 100
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,11 +64,8 @@ class HomePageFragment : Fragment() {
             navController.navigate(R.id.action_homePageFragment_to_uploadPostFragment)
         }
 
-        recyclerView = view.findViewById(R.id.postsRecyclerView) // שימוש ב-postsRecyclerView
-        recyclerView.layoutManager = LinearLayoutManager(requireContext()) // שימוש ב-LinearLayoutManager
-
-        val database = (requireActivity().application as MyApplication).database
-        val postDao = database.postDao()
+        recyclerView = view.findViewById(R.id.postsRecyclerView)
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), 2) // שינוי כאן
 
         adapter = PostAdapter(mutableListOf()) { post ->
             // כאן תוסיף את הקוד שיעביר לפרגמנט אחר
@@ -68,14 +74,47 @@ class HomePageFragment : Fragment() {
 
         recyclerView.adapter = adapter
 
-        loadPosts(postDao)
+        // יצירת ViewModel
+        val database = (requireActivity().application as MyApplication).database
+        val factory = HomeViewModelFactory(database)
+        viewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
+
+        // צפייה ב-LiveData
+        viewModel.posts.observe(viewLifecycleOwner) { posts ->
+            adapter.updatePosts(posts)
+        }
     }
 
-    private fun loadPosts(postDao: com.example.adoptadog.database.PostDao) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            val posts = postDao.getAllPosts()
-            withContext(Dispatchers.Main) {
-                adapter.updatePosts(posts)
+    override fun onResume() {
+        super.onResume()
+        checkPermissions()
+        requireActivity().invalidateOptionsMenu()
+    }
+
+    private fun checkPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_MEDIA_IMAGES), READ_MEDIA_IMAGES_REQUEST_CODE)
+            } else {
+                Log.d("HomePageFragment", "READ_MEDIA_IMAGES permission already granted")
+            }
+        } else {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), READ_MEDIA_IMAGES_REQUEST_CODE)
+            } else {
+                Log.d("HomePageFragment", "READ_EXTERNAL_STORAGE permission already granted")
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == READ_MEDIA_IMAGES_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d("HomePageFragment", "Permissions granted")
+            } else {
+                Log.d("HomePageFragment", "Permissions denied")
+                Toast.makeText(requireContext(), "Permissions denied", Toast.LENGTH_SHORT).show()
             }
         }
     }

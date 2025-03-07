@@ -22,4 +22,5 @@ interface PostDao {
 
     @Query("UPDATE posts SET comments = :comments WHERE id = :postId")
     suspend fun updateComments(postId: Long, comments: List<Comment>)
+
 }
