@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.adoptadog.LoginActivity
 import com.example.adoptadog.MyApplication
+import com.example.adoptadog.NavHostActivity
 import com.example.adoptadog.R
 import com.example.adoptadog.database.Post
 import kotlinx.coroutines.launch
@@ -42,9 +43,9 @@ class HomePageFragment : Fragment() {
         val logoutButton: Button = view.findViewById(R.id.logoutButton)
         val addPostButton: Button = view.findViewById(R.id.addPostButton) // הוספת כפתור הפלוס
 
-
         // הגדרת הלחיצה על האייקון - ניווט לפרגמנט פרופיל
         profileIcon.setOnClickListener {
+            (activity as? NavHostActivity)?.startLoading()
             navController.navigate(R.id.FragmentProfile)
         }
 
@@ -57,18 +58,15 @@ class HomePageFragment : Fragment() {
 
         // הגדרת הלחיצה על כפתור הפלוס - ניווט לפרגמנט העלאת פוסט
         addPostButton.setOnClickListener {
+            (activity as? NavHostActivity)?.startLoading()
             navController.navigate(R.id.action_homePageFragment_to_uploadPostFragment)
         }
-//        backtohomepage.setOnClickListener {
-//            navController.navigate(R.id.action_uploadPostFragment_to_homePageFragment)
-//        }
 
         recyclerView = view.findViewById(R.id.recyclerViewPosts)
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), 2) // שינוי ל-GridLayoutManager ו-requireContext()
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), 2) // שינוי ל-GridLayoutManager
 
         // אתחול האדפטר עם למדה ריקה
         adapter = PostAdapter(mutableListOf()) { }
-
         recyclerView.adapter = adapter
 
         val database = (requireActivity().application as MyApplication).database
@@ -81,6 +79,7 @@ class HomePageFragment : Fragment() {
             postDao.insert(Post(title = "My Post 4", content = "This is my post content 4."))
             val posts = postDao.getAllPosts()
             adapter.updatePosts(posts)
+            (activity as? NavHostActivity)?.stopLoading() // עצור ספינר לאחר טעינת פוסטים
         }
     }
 }

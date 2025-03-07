@@ -4,12 +4,15 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.ProgressBar
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -20,14 +23,22 @@ import com.example.adoptadog.R
 class UploadPostFragment : Fragment() {
 
     private lateinit var selectImageButton: Button
+    private lateinit var uploadPostButton: Button
     private lateinit var imagePreview: ImageView
+    private lateinit var progressBar: ProgressBar
     private var selectedImageUri: Uri? = null
 
     private val pickImage =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             if (uri != null) {
+                startLoading()  // מציג ספינר בעת בחירת תמונה
                 selectedImageUri = uri
                 imagePreview.setImageURI(uri)
+
+                Handler(Looper.getMainLooper()).postDelayed({
+                    stopLoading()  // מסתיר ספינר אחרי שהתמונה נטענה
+                }, 1000)
+
             } else {
                 Log.e("UploadPostFragment", "No image selected")
             }
@@ -45,7 +56,9 @@ class UploadPostFragment : Fragment() {
 
         val backButton = view.findViewById<Button>(R.id.backButton)
         selectImageButton = view.findViewById(R.id.selectImageButton)
+        uploadPostButton = view.findViewById(R.id.uploadPostButton)
         imagePreview = view.findViewById(R.id.imagePreview)
+        progressBar = view.findViewById(R.id.progressBar) // מקשר את הספינר
 
         backButton.setOnClickListener {
             findNavController().navigateUp()
@@ -55,6 +68,23 @@ class UploadPostFragment : Fragment() {
 
         selectImageButton.setOnClickListener {
             pickImage.launch("image/*")
+        }
+
+        uploadPostButton.setOnClickListener {
+            uploadPost()
+        }
+    }
+
+    private fun uploadPost() {
+        if (selectedImageUri != null) {
+            startLoading()
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                stopLoading()
+                findNavController().navigate(R.id.action_uploadPostFragment_to_homePageFragment)
+            }, 2000) // מדמה העלאה של 2 שניות, להחליף בעתיד בקוד אמיתי
+        } else {
+            Log.e("UploadPostFragment", "No image to upload")
         }
     }
 
@@ -72,19 +102,12 @@ class UploadPostFragment : Fragment() {
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // הרשאה ניתנה
-            } else {
-                // הרשאה נדחתה
-            }
-        }
+    private fun startLoading() {
+        progressBar.visibility = View.VISIBLE
+    }
+
+    private fun stopLoading() {
+        progressBar.visibility = View.GONE
     }
 
     companion object {
