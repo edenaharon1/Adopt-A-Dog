@@ -63,20 +63,18 @@
         app:layout_constraintTop_toBottomOf="@id/topBar" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewPosts"
+        android:id="@+id/postsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/bottomBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/titleText"
-        app:layout_constraintVertical_bias="0.0"
-        app:spanCount="2" />
+        app:layout_constraintVertical_bias="0.0" />
 
-    <!-- כפתור ה-"+" - שיניתי את המיקום כך שיהיה במרכז החלק הלבן -->
     <Button
         android:id="@+id/addPostButton"
         android:layout_width="60dp"

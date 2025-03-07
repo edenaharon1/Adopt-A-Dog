@@ -11,14 +11,15 @@ import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.adoptadog.LoginActivity
 import com.example.adoptadog.MyApplication
 import com.example.adoptadog.NavHostActivity
 import com.example.adoptadog.R
-import com.example.adoptadog.database.Post
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HomePageFragment : Fragment() {
 
@@ -35,51 +36,53 @@ class HomePageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // אתחול ה-NavController
         val navController = findNavController()
 
-        // חיבור הכפתורים מה-XML
         val profileIcon = view.findViewById<ImageView>(R.id.profileIcon)
         val logoutButton: Button = view.findViewById(R.id.logoutButton)
-        val addPostButton: Button = view.findViewById(R.id.addPostButton) // הוספת כפתור הפלוס
+        val addPostButton: Button = view.findViewById(R.id.addPostButton)
 
-        // הגדרת הלחיצה על האייקון - ניווט לפרגמנט פרופיל
+
         profileIcon.setOnClickListener {
             (activity as? NavHostActivity)?.startLoading()
             navController.navigate(R.id.FragmentProfile)
         }
 
-        // יציאה מהחשבון בלחיצה על כפתור "Log Out"
         logoutButton.setOnClickListener {
             val intent = Intent(requireContext(), LoginActivity::class.java)
             startActivity(intent)
             requireActivity().finish()
         }
 
-        // הגדרת הלחיצה על כפתור הפלוס - ניווט לפרגמנט העלאת פוסט
         addPostButton.setOnClickListener {
             (activity as? NavHostActivity)?.startLoading()
             navController.navigate(R.id.action_homePageFragment_to_uploadPostFragment)
         }
 
-        recyclerView = view.findViewById(R.id.recyclerViewPosts)
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), 2) // שינוי ל-GridLayoutManager
 
-        // אתחול האדפטר עם למדה ריקה
-        adapter = PostAdapter(mutableListOf()) { }
-        recyclerView.adapter = adapter
+        recyclerView = view.findViewById(R.id.postsRecyclerView) // שימוש ב-postsRecyclerView
+        recyclerView.layoutManager = LinearLayoutManager(requireContext()) // שימוש ב-LinearLayoutManager
 
         val database = (requireActivity().application as MyApplication).database
         val postDao = database.postDao()
 
-        lifecycleScope.launch {
-            postDao.insert(Post(title = "My Post 1", content = "This is my post content 1."))
-            postDao.insert(Post(title = "My Post 2", content = "This is my post content 2."))
-            postDao.insert(Post(title = "My Post 3", content = "This is my post content 3."))
-            postDao.insert(Post(title = "My Post 4", content = "This is my post content 4."))
+        adapter = PostAdapter(mutableListOf()) { post ->
+            // כאן תוסיף את הקוד שיעביר לפרגמנט אחר
+            // למשל, navController.navigate(R.id.action_homePageFragment_to_postDetailsFragment)
+        }
+
+        recyclerView.adapter = adapter
+
+        loadPosts(postDao)
+    }
+
+    private fun loadPosts(postDao: com.example.adoptadog.database.PostDao) {
+        lifecycleScope.launch(Dispatchers.IO) {
             val posts = postDao.getAllPosts()
-            adapter.updatePosts(posts)
-            (activity as? NavHostActivity)?.stopLoading() // עצור ספינר לאחר טעינת פוסטים
+withContext(Dispatchers.Main) {
+    adapter.updatePosts(posts)
+    (activity as? NavHostActivity)?.stopLoading() // עצור ספינר לאחר טעינת פוסטים
+}
         }
     }
 }

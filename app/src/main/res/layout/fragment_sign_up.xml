@@ -120,7 +120,7 @@
         app:layout_constraintTop_toBottomOf="@id/nameLabel" />
 
     <Button
-        android:id="@+id/loginButton"
+        android:id="@+id/signupButton"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginHorizontal="32dp"
@@ -132,19 +132,40 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/nameInput" />
 
-    <TextView
-        android:id="@+id/signupLink"
+    <LinearLayout
+        android:id="@+id/signupLinkLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_marginTop="20dp"
-        android:text="Already have a user? LOG IN"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        android:textStyle="bold"
         android:layout_marginBottom="32dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layoutDirection="ltr"
+        app:layout_constraintTop_toBottomOf="@id/signupButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/loginButton" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Already have a user?"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:layout_marginEnd="4dp"
+            android:gravity="start"
+            tools:ignore="RtlHardcoded"/>
+
+        <TextView
+            android:id="@+id/loginButtonLink"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LOGIN"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="start"/>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
