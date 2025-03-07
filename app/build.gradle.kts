@@ -68,6 +68,10 @@ dependencies {
 
     // Design
     implementation ("com.google.android.material:material:1.8.0")
+    implementation ("com.google.android.material:material:1.11.0")//bottom bar
+
+    //picasso
+    implementation("com.squareup.picasso:picasso:2.8")
 
 
     // Google Maps
@@ -80,6 +84,7 @@ dependencies {
     kapt("androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation("com.google.code.gson:gson:2.8.8")
 }
 
 

@@ -9,18 +9,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.example.adoptadog.R
+import com.example.adoptadog.database.AppDatabase
+import com.example.adoptadog.database.Post
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class UploadPostFragment : Fragment() {
 
     private lateinit var selectImageButton: Button
     private lateinit var imagePreview: ImageView
+    private lateinit var postTextEditText: EditText
+    private lateinit var uploadNowButton: Button
     private var selectedImageUri: Uri? = null
 
     private val pickImage =
@@ -46,15 +55,52 @@ class UploadPostFragment : Fragment() {
         val backButton = view.findViewById<Button>(R.id.backButton)
         selectImageButton = view.findViewById(R.id.selectImageButton)
         imagePreview = view.findViewById(R.id.imagePreview)
+        postTextEditText = view.findViewById(R.id.postDescription)
+        uploadNowButton = view.findViewById(R.id.uploadPostButton)
 
         backButton.setOnClickListener {
             findNavController().navigateUp()
         }
 
-        requestPermissions() // בקשת הרשאות
+        requestPermissions()
 
         selectImageButton.setOnClickListener {
             pickImage.launch("image/*")
+        }
+
+        uploadNowButton.setOnClickListener {
+            uploadPost()
+        }
+    }
+
+    private fun uploadPost() {
+        val postText = postTextEditText.text.toString()
+        val imageUri = selectedImageUri
+        if (postText.isNotEmpty() && imageUri != null) {
+            lifecycleScope.launch(Dispatchers.IO) {
+                try {
+                    val post = Post(
+                        imageUrl = imageUri.toString(),
+                        userId = "1",
+                        description = postText,
+                        likes = emptyList(),
+                        comments = emptyList(),
+                        timestamp = System.currentTimeMillis()
+                    )
+                    AppDatabase.getDatabase(requireContext(), lifecycleScope).postDao().insert(post)
+                    withContext(Dispatchers.Main) {
+                        postTextEditText.text.clear() // ניקוי ה-EditText
+                        findNavController().navigateUp()
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main){
+                        Toast.makeText(requireContext(), "שגיאה בהעלאת הפוסט", Toast.LENGTH_SHORT).show()
+                    }
+                    Log.e("UploadPostFragment", "Error uploading post: ${e.message}")
+                }
+            }
+        } else {
+            Log.e("UploadPostFragment", "Text or image is missing")
         }
     }
 
