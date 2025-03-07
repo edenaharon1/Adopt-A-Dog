@@ -11,9 +11,6 @@ interface PostDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(post: Post)
 
-    @Query("SELECT * FROM posts")
-    suspend fun getAllPosts(): List<Post>
-
     @Delete
     suspend fun delete(post: Post)
 
@@ -22,4 +19,7 @@ interface PostDao {
 
     @Query("UPDATE posts SET comments = :comments WHERE id = :postId")
     suspend fun updateComments(postId: Long, comments: List<Comment>)
+
+    @Query("SELECT * FROM posts ORDER BY timestamp DESC")
+    suspend fun getAllPosts(): List<Post>
 }
