@@ -29,6 +29,9 @@
         <action
             android:id="@+id/action_FragmentProfile_to_uploadPostFragment"
             app:destination="@id/uploadPostFragment" />
+        <action
+            android:id="@+id/action_FragmentProfile_to_fragmentEditProfile"
+            app:destination="@id/fragmentEditProfile" />
     </fragment>
 
     <fragment
@@ -51,6 +54,9 @@
         <action
             android:id="@+id/action_homePageFragment_to_uploadPostFragment"
             app:destination="@id/uploadPostFragment" />
+        <action
+            android:id="@+id/action_homePageFragment_to_fragmentPost"
+            app:destination="@id/fragmentPost" />
     </fragment>
     <fragment
         android:id="@+id/uploadPostFragment"
@@ -59,6 +65,23 @@
         <action
             android:id="@+id/action_uploadPostFragment_to_homePageFragment"
             app:destination="@id/homePageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentPost"
+        android:name="com.example.adoptadog.FragmentPost"
+        android:label="FragmentPost" >
+        <action
+            android:id="@+id/action_fragmentPost_to_homePageFragment"
+            app:destination="@id/homePageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentEditProfile"
+        android:name="com.example.adoptadog.FragmentEditProfile"
+        android:label="fragment_edit_profile"
+        tools:layout="@layout/fragment_edit_profile" >
+        <action
+            android:id="@+id/action_fragmentEditProfile_to_FragmentProfile"
+            app:destination="@id/FragmentProfile" />
     </fragment>
 
 </navigation>

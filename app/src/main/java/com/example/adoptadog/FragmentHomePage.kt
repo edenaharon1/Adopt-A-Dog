@@ -17,6 +17,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager // שינוי כאן
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +27,9 @@ import com.example.adoptadog.NavHostActivity
 import com.example.adoptadog.R
 import com.example.adoptadog.ui.HomeViewModel
 import com.example.adoptadog.ui.HomeViewModelFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HomePageFragment : Fragment() {
 
@@ -69,7 +73,7 @@ class HomePageFragment : Fragment() {
         }
 
 recyclerView = view.findViewById(R.id.postsRecyclerView);
-recyclerView.layoutManager = new GridLayoutManager(requireContext(), 2); // שימוש ב-GridLayoutManager עם 2 עמודות
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), 2) // שימוש ב-GridLayoutManager עם 2 עמודות
 
 val database = (requireActivity().application as MyApplication).database;
 val postDao = database.postDao();
@@ -80,9 +84,6 @@ val postDao = database.postDao();
         }
 
         recyclerView.adapter = adapter
-
-        // יצירת ViewModel
-        val database = (requireActivity().application as MyApplication).database
         val factory = HomeViewModelFactory(database)
         viewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
 
@@ -140,5 +141,3 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out
         }
     }
         }
-    }
-}
