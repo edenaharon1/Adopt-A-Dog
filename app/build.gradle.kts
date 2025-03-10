@@ -50,36 +50,37 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-//nav graph
+    // nav graph
     val nav_version = "2.5.3" // או הגרסה העדכנית ביותר
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
     implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
 
-        implementation(platform("com.google.firebase:firebase-bom:31.0.0"))  // Firebase BOM
-        implementation("com.google.firebase:firebase-auth")   // Firebase Authentication
-        implementation("com.google.firebase:firebase-firestore")  // Firebase Firestore
-        implementation("com.google.firebase:firebase-storage")  // Firebase Storage
+    // Firebase BOM
+    implementation(platform("com.google.firebase:firebase-bom:31.0.0"))  // Firebase BOM
+    implementation("com.google.firebase:firebase-auth")   // Firebase Authentication
+    implementation("com.google.firebase:firebase-database")  // Firebase Realtime Database
+    // אם אתה עובד עם Firestore אז הוסף את Firebase Firestore
+    // implementation("com.google.firebase:firebase-firestore")  // Firebase Firestore
+    implementation("com.google.firebase:firebase-storage")  // Firebase Storage
 
-
-        implementation("androidx.navigation:navigation-fragment-ktx:2.7.5") //תוספים של ה nav graph 
-        implementation("androidx.navigation:navigation-ui-ktx:2.7.5")
-
-
+    // nav graph plugins
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.5")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.5")
 
     // Design
-    implementation ("com.google.android.material:material:1.8.0")
-
+    implementation("com.google.android.material:material:1.8.0")
 
     // Google Maps
-    implementation ("com.google.android.gms:play-services-maps:18.0.2")
+    implementation("com.google.android.gms:play-services-maps:18.0.2")
 
     // API data fetching
-    implementation ("com.android.volley:volley:1.2.1")
-    //Room
-    implementation("androidx.room:room-runtime:2.6.1") // או הגרסה העדכנית ביותר
+    implementation("com.android.volley:volley:1.2.1")
+
+    // Room
+    implementation("androidx.room:room-runtime:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
+
+    // RecyclerView
     implementation("androidx.recyclerview:recyclerview:1.3.2")
 }
-
-
