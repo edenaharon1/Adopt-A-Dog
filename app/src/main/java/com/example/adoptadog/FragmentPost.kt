@@ -1,7 +1,6 @@
 package com.example.adoptadog.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +12,11 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.adoptadog.MyApplication
 import com.example.adoptadog.R
+import com.example.adoptadog.database.Comment
 import com.example.adoptadog.database.Post
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers
@@ -25,8 +27,10 @@ class PostFragment : Fragment() {
 
     private lateinit var postImage: ImageView
     private lateinit var postDescription: TextView
-    private lateinit var commentsTextView: TextView
+    private lateinit var commentsRecyclerView: RecyclerView
+    private lateinit var commentsAdapter: CommentsAdapter
     private lateinit var addCommentEditText: EditText
+    private lateinit var addCommentButton: Button
     private lateinit var adoptNowButton: Button
     private lateinit var backButton: Button
     private lateinit var currentPost: Post
@@ -45,8 +49,9 @@ class PostFragment : Fragment() {
 
         postImage = view.findViewById(R.id.postImage)
         postDescription = view.findViewById(R.id.postDescription)
-        commentsTextView = view.findViewById(R.id.commentsTextView)
+        commentsRecyclerView = view.findViewById(R.id.commentsRecyclerView)
         addCommentEditText = view.findViewById(R.id.addCommentEditText)
+        addCommentButton = view.findViewById(R.id.addCommentButton)
         adoptNowButton = view.findViewById(R.id.adoptNowButton)
         backButton = view.findViewById(R.id.backButton)
 
@@ -59,6 +64,10 @@ class PostFragment : Fragment() {
         }
 
         loadPostData()
+
+        addCommentButton.setOnClickListener {
+            addComment()
+        }
 
         backButton.setOnClickListener {
             findNavController().popBackStack()
@@ -96,8 +105,37 @@ class PostFragment : Fragment() {
             .into(postImage)
 
         postDescription.text = currentPost.description
-        commentsTextView.text = "Comments: ${currentPost.comments.size}"
 
-        // TODO: Display comments in a RecyclerView or ListView
+        commentsAdapter = CommentsAdapter(currentPost.comments)
+        commentsRecyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = commentsAdapter
+        }
+    }
+
+    private fun addComment() {
+        val commentText = addCommentEditText.text.toString().trim()
+        if (commentText.isNotEmpty()) {
+            lifecycleScope.launch(Dispatchers.IO) {
+                val database = (requireActivity().application as MyApplication).database
+                val postDao = database.postDao()
+
+                val comment = Comment(
+                    authorId = "user123", // Replace with actual user ID
+                    text = commentText,
+                    postId = currentPost.id
+                )
+
+                currentPost.comments.add(comment)
+                postDao.updatePost(currentPost)
+
+                withContext(Dispatchers.Main) {
+                    addCommentEditText.text.clear()
+                    commentsAdapter.notifyDataSetChanged()
+                    updateUI()
+                }
+            }
+        }
     }
 }
+

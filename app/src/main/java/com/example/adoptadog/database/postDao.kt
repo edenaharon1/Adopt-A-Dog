@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface PostDao {
@@ -25,4 +26,7 @@ interface PostDao {
 
     @Query("SELECT * FROM posts WHERE id = :postId")
     suspend fun getPostById(postId: Long): Post? //
+
+    @Update
+    suspend fun updatePost(post: Post)
 }
