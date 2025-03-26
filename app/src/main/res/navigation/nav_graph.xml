@@ -68,7 +68,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragmentPost"
-        android:name="com.example.adoptadog.FragmentPost"
+        android:name="com.example.adoptadog.fragments.PostFragment"
         android:label="FragmentPost" >
         <action
             android:id="@+id/action_fragmentPost_to_homePageFragment"

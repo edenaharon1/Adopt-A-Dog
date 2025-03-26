@@ -1,7 +1,9 @@
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.adoptadog.R
 import com.example.adoptadog.database.Post
@@ -9,7 +11,7 @@ import com.squareup.picasso.Picasso
 
 class PostAdapter(
     private var posts: MutableList<Post>,
-    private val onItemClick: (Post) -> Unit
+    private val navController: NavController // הוספנו NavController כפרמטר
 ) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -20,9 +22,8 @@ class PostAdapter(
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.post_item, parent, false)
 
-        // חישוב גודל הפריט
         val displayMetrics = parent.context.resources.displayMetrics
-        val itemWidth = displayMetrics.widthPixels / 2 // 2 טורים
+        val itemWidth = displayMetrics.widthPixels / 2
         val layoutParams = itemView.layoutParams
         layoutParams.width = itemWidth
         layoutParams.height = itemWidth
@@ -34,15 +35,16 @@ class PostAdapter(
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val currentPost = posts[position]
 
-        // טעינת תמונה עם Picasso
         Picasso.get()
             .load(currentPost.imageUrl)
-            .fit() // התאמת התמונה למסגרת
-            .centerCrop() // חיתוך התמונה למילוי המסגרת
+            .fit()
+            .centerCrop()
             .into(holder.postImageView)
 
         holder.itemView.setOnClickListener {
-            onItemClick(currentPost)
+            val bundle = Bundle()
+            bundle.putLong("postId", currentPost.id)
+            navController.navigate(R.id.action_homePageFragment_to_fragmentPost, bundle) // ניווט ל FragmentPost
         }
     }
 
