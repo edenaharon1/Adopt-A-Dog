@@ -22,4 +22,7 @@ interface PostDao {
 
     @Query("SELECT * FROM posts ORDER BY timestamp DESC")
     suspend fun getAllPosts(): List<Post>
+
+    @Query("SELECT * FROM posts WHERE id = :postId")
+    suspend fun getPostById(postId: Long): Post? //
 }

@@ -26,22 +26,22 @@ class FragmentSignUp : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 // הצגת הספינר בזמן טעינה
-(activity as? NavHostActivity)?.startLoading()
+        (activity as? NavHostActivity)?.startLoading()
 
-Handler(Looper.getMainLooper()).postDelayed({
-    (activity as? NavHostActivity)?.stopLoading()
-}, 1000) // הסרת הספינר לאחר שנייה
+        Handler(Looper.getMainLooper()).postDelayed({
+            (activity as? NavHostActivity)?.stopLoading()
+        }, 1000) // הסרת הספינר לאחר שנייה
 
-val navController = findNavController() // קבלת NavController
+        val navController = findNavController() // קבלת NavController
 
-view.findViewById<TextView>(R.id.loginButtonLink).setOnClickListener {
-    val intent = Intent(requireContext(), LoginActivity::class.java)
-    startActivity(intent)
-    requireActivity().finish() // סגירת ה-Activity הנוכחי
-}
+        view.findViewById<TextView>(R.id.loginButtonLink).setOnClickListener {
+            val intent = Intent(requireContext(), LoginActivity::class.java)
+            startActivity(intent)
+            requireActivity().finish() // סגירת ה-Activity הנוכחי
+        }
 
-view.findViewById<Button>(R.id.signupButton).setOnClickListener {
-    navController.navigate(R.id.action_fragmentSignUp_to_homePageFragment) // ניווט ל-Home Fragment
-}
+        view.findViewById<Button>(R.id.signupButton).setOnClickListener {
+            navController.navigate(R.id.action_fragmentSignUp_to_homePageFragment) // ניווט ל-Home Fragment
+        }
     }
 }

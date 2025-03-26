@@ -46,6 +46,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.firebase.database.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -55,13 +56,11 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
     implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
 
-        implementation(platform("com.google.firebase:firebase-bom:31.0.0"))  // Firebase BOM
-        implementation("com.google.firebase:firebase-auth")   // Firebase Authentication
-        implementation("com.google.firebase:firebase-firestore")  // Firebase Firestore
-        implementation("com.google.firebase:firebase-storage")  // Firebase Storage
+
+    
 
 
-        implementation("androidx.navigation:navigation-fragment-ktx:2.7.5") //תוספים של ה nav graph 
+        implementation("androidx.navigation:navigation-fragment-ktx:2.7.5") //תוספים של ה nav graph
         implementation("androidx.navigation:navigation-ui-ktx:2.7.5")
 
 

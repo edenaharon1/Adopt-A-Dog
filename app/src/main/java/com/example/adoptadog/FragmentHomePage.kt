@@ -19,7 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager // שינוי כאן
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.adoptadog.LoginActivity
 import com.example.adoptadog.MyApplication
@@ -55,7 +55,6 @@ class HomePageFragment : Fragment() {
         val logoutButton: Button = view.findViewById(R.id.logoutButton)
         val addPostButton: Button = view.findViewById(R.id.addPostButton)
 
-
         profileIcon.setOnClickListener {
             (activity as? NavHostActivity)?.startLoading()
             navController.navigate(R.id.FragmentProfile)
@@ -72,26 +71,23 @@ class HomePageFragment : Fragment() {
             navController.navigate(R.id.action_homePageFragment_to_uploadPostFragment)
         }
 
-recyclerView = view.findViewById(R.id.postsRecyclerView);
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), 2) // שימוש ב-GridLayoutManager עם 2 עמודות
+        recyclerView = view.findViewById(R.id.postsRecyclerView)
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
 
-val database = (requireActivity().application as MyApplication).database;
-val postDao = database.postDao();
+        val database = (requireActivity().application as MyApplication).database
+        val postDao = database.postDao()
 
-        adapter = PostAdapter(mutableListOf()) { post ->
-            // כאן תוסיף את הקוד שיעביר לפרגמנט אחר
-            // למשל, navController.navigate(R.id.action_homePageFragment_to_postDetailsFragment)
-        }
-
+        adapter = PostAdapter(mutableListOf(), navController) // העברנו navController
         recyclerView.adapter = adapter
+
         val factory = HomeViewModelFactory(database)
         viewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
 
-        // צפייה ב-LiveData
         viewModel.posts.observe(viewLifecycleOwner) { posts ->
             adapter.updatePosts(posts)
         }
     }
+
 
     override fun onResume() {
         super.onResume()
