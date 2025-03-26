@@ -29,4 +29,7 @@ interface PostDao {
 
     @Update
     suspend fun updatePost(post: Post)
+
+    @Query("DELETE FROM posts") // הוספנו את השאילתה הזו
+    suspend fun deleteAllPosts()
 }
