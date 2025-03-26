@@ -10,11 +10,12 @@ data class Post(
     val userId: String,
     val description: String,
     val likes: List<String>,
-    val comments: List<Comment>,
-    val timestamp: Long // הוספת שדה timestamp
+    val comments: MutableList<Comment>, // שינוי כאן
+    val timestamp: Long
 )
 
 data class Comment(
     val authorId: String,
-    val text: String
+    val text: String,
+    val postId: Long // הוספת שדה postId
 )

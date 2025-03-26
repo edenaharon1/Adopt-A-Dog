@@ -77,7 +77,7 @@ class HomePageFragment : Fragment() {
         val database = (requireActivity().application as MyApplication).database
         val postDao = database.postDao()
 
-        adapter = PostAdapter(mutableListOf(), navController) // העברנו navController
+        adapter = PostAdapter(mutableListOf(), navController)
         recyclerView.adapter = adapter
 
         val factory = HomeViewModelFactory(database)
@@ -86,8 +86,20 @@ class HomePageFragment : Fragment() {
         viewModel.posts.observe(viewLifecycleOwner) { posts ->
             adapter.updatePosts(posts)
         }
+
+        // Add the temporary delete function call here
     }
 
+    private fun deleteAllPostsTemporarily(postDao: com.example.adoptadog.database.PostDao) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            postDao.deleteAllPosts()
+
+            withContext(Dispatchers.Main) {
+                Toast.makeText(requireContext(), "כל הפוסטים נמחקו בהצלחה", Toast.LENGTH_SHORT).show()
+                loadPosts(postDao) // Reload posts after deletion
+            }
+        }
+    }
 
     override fun onResume() {
         super.onResume()
@@ -111,7 +123,7 @@ class HomePageFragment : Fragment() {
         }
     }
 
-override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == READ_MEDIA_IMAGES_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -136,4 +148,4 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out
             }
         }
     }
-        }
+}

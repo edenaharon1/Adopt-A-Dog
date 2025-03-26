@@ -28,6 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+
 class UploadPostFragment : Fragment() {
 
     private lateinit var selectImageButton: Button
@@ -96,8 +97,8 @@ class UploadPostFragment : Fragment() {
                         imageUrl = imageUri.toString(),
                         userId = "1",
                         description = postText,
-                        likes = emptyList(),
-                        comments = emptyList(),
+                        likes = emptyList<String>(),
+                        comments = mutableListOf(),
                         timestamp = System.currentTimeMillis()
                     )
                     AppDatabase.getDatabase(requireContext(), lifecycleScope).postDao().insert(post)
