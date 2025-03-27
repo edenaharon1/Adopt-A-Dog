@@ -83,7 +83,7 @@ class PostFragment : Fragment() {
             val database = (requireActivity().application as MyApplication).database
             val postDao = database.postDao()
 
-            val post = postDao.getPostById(postId)
+            val post = postDao.getPostById(postId.toString())
 
             withContext(Dispatchers.Main) {
                 if (post != null) {
