@@ -24,7 +24,7 @@ class FragmentProfile : Fragment(R.layout.fragment_profile) {
 
         // ✨ מציאת הכפתורים
 
-        val editPostsButton: Button = view.findViewById(R.id.editPostsButton)
+        val editPostsButton: Button = view.findViewById(R.id.myPostsButton)
         val returnToHP: Button = view.findViewById(R.id.backToHomeButton)
         val uploadPostButton = view.findViewById<Button>(R.id.uploadPostButton)
         val logoutButton = view.findViewById<Button>(R.id.logoutButton)

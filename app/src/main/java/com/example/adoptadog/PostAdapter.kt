@@ -1,4 +1,6 @@
+
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +13,7 @@ import com.squareup.picasso.Picasso
 
 class PostAdapter(
     private var posts: MutableList<Post>,
-    private val navController: NavController // הוספנו NavController כפרמטר
+    private val navController: NavController
 ) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -34,25 +36,39 @@ class PostAdapter(
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val currentPost = posts[position]
+        Log.d("PostAdapter", "Loading image from: ${currentPost.imageUrl}")
+        holder.postImageView.invalidate()
+        holder.setIsRecyclable(false)
 
         Picasso.get()
             .load(currentPost.imageUrl)
             .fit()
             .centerCrop()
-            .into(holder.postImageView)
+            .into(holder.postImageView, object : com.squareup.picasso.Callback {
+                override fun onSuccess() {
+                    Log.d("PostAdapter", "Image loaded successfully: ${currentPost.imageUrl}")
+                }
+
+                override fun onError(e: Exception?) {
+                    Log.e("PostAdapter", "Error loading image: ${currentPost.imageUrl}", e)
+                    // כאן אתה יכול להציג תמונת ברירת מחדל או לטפל בשגיאה אחרת
+                }
+            })
 
         holder.itemView.setOnClickListener {
             val bundle = Bundle()
             bundle.putLong("postId", currentPost.id)
-            navController.navigate(R.id.action_homePageFragment_to_fragmentPost, bundle) // ניווט ל FragmentPost
+            navController.navigate(R.id.action_homePageFragment_to_fragmentPost, bundle)
         }
     }
 
     override fun getItemCount() = posts.size
 
     fun updatePosts(newPosts: List<Post>) {
+        Log.d("PostAdapter", "updatePosts called, newPosts size: ${newPosts.size}")
         posts.clear()
         posts.addAll(newPosts)
         notifyDataSetChanged()
+        Log.d("PostAdapter", "notifyDataSetChanged called")
     }
 }

@@ -74,6 +74,8 @@ class HomePageFragment : Fragment() {
         recyclerView = view.findViewById(R.id.postsRecyclerView)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
 
+        Log.d("HomePageFragment", "LayoutManager: ${recyclerView.layoutManager}")
+
         val database = (requireActivity().application as MyApplication).database
         val postDao = database.postDao()
 
@@ -83,20 +85,41 @@ class HomePageFragment : Fragment() {
         val factory = HomeViewModelFactory(database)
         viewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
 
-        viewModel.posts.observe(viewLifecycleOwner) { posts ->
-            adapter.updatePosts(posts)
-        }
+        // Load posts initially
+        loadPosts(postDao)
 
-        // Add the temporary delete function call here
+        viewModel.posts.observe(viewLifecycleOwner) { posts ->
+            Log.d("HomePageFragment", "Posts received: ${posts.size}")
+
+            if (adapter == null) {
+                Log.e("HomePageFragment", "Adapter is null!")
+            } else {
+                Log.d("HomePageFragment", "Adapter is not null")
+            }
+
+            posts.forEachIndexed { index, post ->
+                Log.d("HomePageFragment", "Post $index: ID=${post.id}, Description=${post.description}")
+            }
+
+            adapter.updatePosts(posts)
+
+            if (posts.isEmpty()) {
+                Toast.makeText(requireContext(), "אין פוסטים להצגה", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
-    private fun deleteAllPostsTemporarily(postDao: com.example.adoptadog.database.PostDao) {
+    private fun loadPosts(postDao: com.example.adoptadog.database.PostDao) {
         lifecycleScope.launch(Dispatchers.IO) {
-            postDao.deleteAllPosts()
+            val posts = postDao.getAllPosts()
+            Log.d("PostLoading", "Loaded posts directly from DAO: ${posts.size}")
 
             withContext(Dispatchers.Main) {
-                Toast.makeText(requireContext(), "כל הפוסטים נמחקו בהצלחה", Toast.LENGTH_SHORT).show()
-                loadPosts(postDao) // Reload posts after deletion
+                adapter.updatePosts(posts)
+
+                if (posts.isEmpty()) {
+                    Toast.makeText(requireContext(), "לא נמצאו פוסטים", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -135,16 +158,6 @@ class HomePageFragment : Fragment() {
             } else {
                 Log.d("HomePageFragment", "Permissions denied")
                 Toast.makeText(requireContext(), "Permissions denied", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    private fun loadPosts(postDao: com.example.adoptadog.database.PostDao) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            val posts = postDao.getAllPosts()
-            withContext(Dispatchers.Main) {
-                adapter.updatePosts(posts)
-                (activity as? NavHostActivity)?.stopLoading() // עצור ספינר לאחר טעינת פוסטים
             }
         }
     }
