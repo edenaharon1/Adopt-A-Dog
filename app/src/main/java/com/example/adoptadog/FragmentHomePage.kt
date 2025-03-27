@@ -79,7 +79,7 @@ class HomePageFragment : Fragment() {
         val database = (requireActivity().application as MyApplication).database
         val postDao = database.postDao()
 
-        adapter = PostAdapter(mutableListOf(), navController)
+        adapter = PostAdapter(mutableListOf(), navController, isEditMode = false) // הוספנו isEditMode = false
         recyclerView.adapter = adapter
 
         val factory = HomeViewModelFactory(database)

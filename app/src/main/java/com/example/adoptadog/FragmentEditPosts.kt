@@ -50,12 +50,10 @@ class EditPostsFragment : Fragment() {
 
         recyclerView = view.findViewById(R.id.recyclerViewPosts)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        postsAdapter = PostAdapter(mutableListOf(), findNavController())
-
-        postsAdapter.onItemClick = { post ->
+        postsAdapter = PostAdapter(mutableListOf(), findNavController(), isEditMode = true, onItemClick = { post ->
             currentPost = post
             showPostDialog(post)
-        }
+        })
 
         recyclerView.adapter = postsAdapter
 
