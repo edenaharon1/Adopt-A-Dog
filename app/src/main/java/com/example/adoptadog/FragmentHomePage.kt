@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -19,7 +20,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager // שינוי כאן
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.adoptadog.LoginActivity
 import com.example.adoptadog.MyApplication
@@ -54,7 +55,7 @@ class HomePageFragment : Fragment() {
         val profileIcon = view.findViewById<ImageView>(R.id.profileIcon)
         val logoutButton: Button = view.findViewById(R.id.logoutButton)
         val addPostButton: Button = view.findViewById(R.id.addPostButton)
-
+        val mapButton: ImageButton = view.findViewById(R.id.buttonToMap)
 
         profileIcon.setOnClickListener {
             (activity as? NavHostActivity)?.startLoading()
@@ -72,22 +73,24 @@ class HomePageFragment : Fragment() {
             navController.navigate(R.id.action_homePageFragment_to_uploadPostFragment)
         }
 
-recyclerView = view.findViewById(R.id.postsRecyclerView);
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), 2) // שימוש ב-GridLayoutManager עם 2 עמודות
+        mapButton.setOnClickListener {
+            navController.navigate(R.id.fragmentMap)
+        }
 
-val database = (requireActivity().application as MyApplication).database;
-val postDao = database.postDao();
+        recyclerView = view.findViewById(R.id.postsRecyclerView)
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+
+        val database = (requireActivity().application as MyApplication).database
+        val postDao = database.postDao()
 
         adapter = PostAdapter(mutableListOf()) { post ->
-            // כאן תוסיף את הקוד שיעביר לפרגמנט אחר
-            // למשל, navController.navigate(R.id.action_homePageFragment_to_postDetailsFragment)
+            // פעולה בלחיצה על פוסט
         }
 
         recyclerView.adapter = adapter
         val factory = HomeViewModelFactory(database)
         viewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
 
-        // צפייה ב-LiveData
         viewModel.posts.observe(viewLifecycleOwner) { posts ->
             adapter.updatePosts(posts)
         }
@@ -115,12 +118,11 @@ val postDao = database.postDao();
         }
     }
 
-override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == READ_MEDIA_IMAGES_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Log.d("HomePageFragment", "Permissions granted")
-                // לאחר קבלת הרשאות, טען את הפוסטים
                 val database = (requireActivity().application as MyApplication).database
                 val postDao = database.postDao()
                 loadPosts(postDao)
@@ -136,8 +138,8 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out
             val posts = postDao.getAllPosts()
             withContext(Dispatchers.Main) {
                 adapter.updatePosts(posts)
-                (activity as? NavHostActivity)?.stopLoading() // עצור ספינר לאחר טעינת פוסטים
+                (activity as? NavHostActivity)?.stopLoading()
             }
         }
     }
-        }
+}

@@ -1,19 +1,29 @@
 package com.example.adoptadog
 
-import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
+import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-
+import com.example.adoptadog.database.User
+import com.example.adoptadog.database.UserDao
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class FragmentSignUp : Fragment() {
+
+    private lateinit var emailInput: EditText
+    private lateinit var passwordInput: EditText
+    private lateinit var nameInput: EditText
+    private lateinit var signupButton: Button
+    private lateinit var userDao: UserDao
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,23 +35,55 @@ class FragmentSignUp : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-// הצגת הספינר בזמן טעינה
-(activity as? NavHostActivity)?.startLoading()
+        emailInput = view.findViewById(R.id.emailInput)
+        passwordInput = view.findViewById(R.id.passwordInput)
+        nameInput = view.findViewById(R.id.nameInput)
+        signupButton = view.findViewById(R.id.signupButton)
 
-Handler(Looper.getMainLooper()).postDelayed({
-    (activity as? NavHostActivity)?.stopLoading()
-}, 1000) // הסרת הספינר לאחר שנייה
+        userDao = (requireActivity().application as MyApplication).database.userDao()
 
-val navController = findNavController() // קבלת NavController
+        signupButton.setOnClickListener {
+            val email = emailInput.text.toString().trim()
+            val password = passwordInput.text.toString().trim()
+            val name = nameInput.text.toString().trim()
 
-view.findViewById<TextView>(R.id.loginButtonLink).setOnClickListener {
-    val intent = Intent(requireContext(), LoginActivity::class.java)
-    startActivity(intent)
-    requireActivity().finish() // סגירת ה-Activity הנוכחי
-}
+            if (email.isNotEmpty() && password.isNotEmpty() && name.isNotEmpty()) {
+                FirebaseAuth.getInstance()
+                    .createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val firebaseUser = FirebaseAuth.getInstance().currentUser
+                            firebaseUser?.let { user ->
+                                val newUser = User(
+                                    uid = user.uid,
+                                    name = name,
+                                    email = email
+                                )
 
-view.findViewById<Button>(R.id.signupButton).setOnClickListener {
-    navController.navigate(R.id.action_fragmentSignUp_to_homePageFragment) // ניווט ל-Home Fragment
-}
+                                lifecycleScope.launch(Dispatchers.IO) {
+                                    userDao.insert(newUser)
+
+                                    withContext(Dispatchers.Main) {
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "ההרשמה הצליחה!",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        findNavController().navigate(R.id.action_fragmentSignUp_to_homePageFragment)
+                                    }
+                                }
+                            }
+                        } else {
+                            Toast.makeText(
+                                requireContext(),
+                                "ההרשמה נכשלה: ${task.exception?.message}",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+            } else {
+                Toast.makeText(requireContext(), "יש למלא את כל השדות", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

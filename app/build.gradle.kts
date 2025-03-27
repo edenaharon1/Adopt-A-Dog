@@ -28,63 +28,61 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
+
     buildFeatures {
         viewBinding = true
     }
 }
 
 dependencies {
+    // AndroidX and Material
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    implementation("com.google.android.material:material:1.11.0")
 
-//nav graph
-    val nav_version = "2.5.3" // או הגרסה העדכנית ביותר
+    // Navigation
+    val nav_version = "2.7.5"
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
     implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
 
-        implementation(platform("com.google.firebase:firebase-bom:31.0.0"))  // Firebase BOM
-        implementation("com.google.firebase:firebase-auth")   // Firebase Authentication
-        implementation("com.google.firebase:firebase-firestore")  // Firebase Firestore
-        implementation("com.google.firebase:firebase-storage")  // Firebase Storage
-
-
-        implementation("androidx.navigation:navigation-fragment-ktx:2.7.5") //תוספים של ה nav graph 
-        implementation("androidx.navigation:navigation-ui-ktx:2.7.5")
-
-
-
-    // Design
-    implementation ("com.google.android.material:material:1.8.0")
-    implementation ("com.google.android.material:material:1.11.0")//bottom bar
-
-    //picasso
-    implementation("com.squareup.picasso:picasso:2.8")
-
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:31.0.0"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-storage")
 
     // Google Maps
-    implementation ("com.google.android.gms:play-services-maps:18.0.2")
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
 
-    // API data fetching
-    implementation ("com.android.volley:volley:1.2.1")
-    //Room
-    implementation("androidx.room:room-runtime:2.6.1") // או הגרסה העדכנית ביותר
+    // REST API (Volley)
+    implementation("com.android.volley:volley:1.2.1")
+
+    // Room
+    implementation("androidx.room:room-runtime:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
+
+    // Other utils
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("com.google.code.gson:gson:2.8.8")
+    implementation("com.squareup.picasso:picasso:2.8")
+    implementation("com.google.android.libraries.places:places:3.3.0")
+
+
+    // Tests
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 }
-
-

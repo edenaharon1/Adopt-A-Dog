@@ -10,7 +10,6 @@
 
     <include layout="@layout/base_layout"/>
 
-    <!-- כפתור יציאה בצד שמאל למעלה -->
     <Button
         android:id="@+id/logoutButton"
         android:layout_width="wrap_content"
@@ -19,28 +18,20 @@
         android:textSize="16sp"
         android:textColor="@color/white"
         android:background="@drawable/button_style"
-        android:paddingStart="12dp"
-        android:paddingTop="6dp"
-        android:paddingEnd="12dp"
-        android:paddingBottom="6dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"/>
 
-
-    <!-- אייקון פרופיל קטן בצד ימין למעלה -->
     <ImageView
         android:id="@+id/profileIconSmall"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:src="@drawable/ic_profile"
-        android:scaleType="centerInside"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_margin="16dp"/>
 
-    <!-- כותרת Welcome -->
     <TextView
         android:id="@+id/welcomeText"
         android:layout_width="wrap_content"
@@ -53,7 +44,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="8dp"/>
 
-    <!-- Hello, user! -->
     <TextView
         android:id="@+id/userNameText"
         android:layout_width="wrap_content"
@@ -67,19 +57,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="8dp"/>
 
-    <!-- אייקון המשתמש המרכזי -->
     <ImageView
         android:id="@+id/profileImage"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:src="@drawable/ic_profile"
         android:scaleType="centerCrop"
+        android:clickable="true"
+        android:focusable="true"
+        android:contentDescription="Profile Image"
         app:layout_constraintTop_toBottomOf="@id/userNameText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp" />
 
-    <!-- רקע חום לתפריט (מעוגל בחלק העליון) -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -92,7 +84,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <!-- כפתורי פרופיל -->
         <Button
             android:id="@+id/myPostsButton"
             android:layout_width="match_parent"
@@ -137,9 +128,6 @@
             android:textStyle="bold"
             android:padding="12dp"/>
 
-
-
-        <!-- כפתור חזרה לעמוד הראשי -->
         <Button
             android:id="@+id/backToHomeButton"
             android:layout_width="wrap_content"
@@ -149,10 +137,6 @@
             android:textColor="@color/white"
             android:paddingHorizontal="24dp"
             android:paddingVertical="8dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            android:layout_marginTop="16dp"/>
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
