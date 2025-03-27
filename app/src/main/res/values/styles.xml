@@ -1,7 +1,8 @@
 <resources>
-
-    <style name="Widget.Theme.AdoptADog.ButtonBar.Fullscreen" parent="">
-        <item name="android:background">@color/black_overlay</item>
-        <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
+    <style name="AppTheme.BackgroundWithStrip" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <item name="android:windowBackground">@drawable/background_with_brown_strip</item>
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent_color</item>
     </style>
 </resources>

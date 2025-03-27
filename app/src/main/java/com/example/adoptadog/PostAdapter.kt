@@ -1,4 +1,4 @@
-
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,8 +13,8 @@ import com.squareup.picasso.Picasso
 class PostAdapter(
     private var posts: MutableList<Post>,
     private val navController: NavController,
-    private val onPostClicked: ((Post) -> Unit)? = null,
-    var onItemClick: ((Post) -> Unit)? = null,
+    private val isEditMode: Boolean = false, // הוסף את ה-flag
+    private val onItemClick: ((Post) -> Unit)? = null // הוסף את ה-callback
 ) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -57,16 +57,14 @@ class PostAdapter(
             })
 
         holder.itemView.setOnClickListener {
-            if (onPostClicked != null) {
-                onPostClicked.invoke(currentPost)
-            } else if (onItemClick != null) {
+            if (isEditMode) {
+                // אם במצב עריכה, הפעל את ה-callback
                 onItemClick?.invoke(currentPost)
             } else {
-                // Remove or comment out the navigation code to avoid the error
-                // val bundle = Bundle()
-                // bundle.putString("postId", currentPost.id.toString())
-                // navController.navigate(R.id.action_homePageFragment_to_fragmentPost, bundle)
-                Log.w("PostAdapter", "No click listener defined. Navigation skipped.")
+                // אם לא במצב עריכה, נווט לפרגמנט הפוסט
+                val bundle = Bundle()
+                bundle.putLong("postId", currentPost.id)
+                navController.navigate(R.id.action_homePageFragment_to_fragmentPost, bundle)
             }
         }
     }

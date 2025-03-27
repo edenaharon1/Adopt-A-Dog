@@ -2,7 +2,6 @@ package com.example.adoptadog.fragments
 
 import PostAdapter
 import android.app.Activity.RESULT_OK
-import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -13,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -27,6 +27,10 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.util.UUID
 
 class EditPostsFragment : Fragment() {
 
@@ -50,12 +54,10 @@ class EditPostsFragment : Fragment() {
 
         recyclerView = view.findViewById(R.id.recyclerViewPosts)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        postsAdapter = PostAdapter(mutableListOf(), findNavController())
-
-        postsAdapter.onItemClick = { post ->
+        postsAdapter = PostAdapter(mutableListOf(), findNavController(), isEditMode = true, onItemClick = { post ->
             currentPost = post
             showPostDialog(post)
-        }
+        })
 
         recyclerView.adapter = postsAdapter
 
@@ -88,8 +90,8 @@ class EditPostsFragment : Fragment() {
     }
 
     private fun showPostDialog(post: Post) {
-        val dialogView = LayoutInflater.from(context).inflate(R.layout.edit_post_dialog, null)
-        val builder = AlertDialog.Builder(context)
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.edit_post_dialog, null)
+        val builder = AlertDialog.Builder(requireContext())
             .setView(dialogView)
 
         val imageView = dialogView.findViewById<ImageView>(R.id.editPostImage)
@@ -108,8 +110,10 @@ class EditPostsFragment : Fragment() {
         dialog.show()
 
         changeImageButton.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK)
-            intent.type = "image/*"
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                addCategory(Intent.CATEGORY_OPENABLE)
+                type = "image/*"
+            }
             startActivityForResult(intent, PICK_IMAGE_REQUEST)
         }
 
@@ -128,10 +132,42 @@ class EditPostsFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.data != null) {
-            selectedImageUri = data.data
+            val imageUri = data.data
+            selectedImageUri = imageUri
             val imageView = view?.findViewById<ImageView>(R.id.editPostImage)
-            imageView?.setImageURI(selectedImageUri)
+            imageView?.setImageURI(imageUri)
+
+            imageUri?.let { uri ->
+                val contentResolver = requireContext().contentResolver
+                val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                contentResolver.takePersistableUriPermission(uri, takeFlags)
+
+                // העתקת התמונה למיקום קבוע
+                val permanentUri = copyImageToInternalStorage(uri)
+                if (permanentUri != null) {
+                    selectedImageUri = permanentUri
+                }
+            }
         }
+    }
+
+    private fun copyImageToInternalStorage(uri: Uri): Uri? {
+        val inputStream = requireContext().contentResolver.openInputStream(uri)
+        if (inputStream != null) {
+            try {
+                val fileName = UUID.randomUUID().toString() + ".jpg"
+                val file = File(requireContext().filesDir, fileName)
+                val outputStream = FileOutputStream(file)
+                inputStream.copyTo(outputStream)
+                inputStream.close()
+                outputStream.close()
+                return Uri.fromFile(file)
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+        return null
     }
 
     private fun updatePostInDatabase(postId: String, newDescription: String, imageUri: Uri?) {
