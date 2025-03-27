@@ -18,6 +18,7 @@ import com.example.adoptadog.MyApplication
 import com.example.adoptadog.R
 import com.example.adoptadog.database.Comment
 import com.example.adoptadog.database.Post
+import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -113,26 +114,37 @@ class PostFragment : Fragment() {
         }
     }
 
+
+
     private fun addComment() {
         val commentText = addCommentEditText.text.toString().trim()
         if (commentText.isNotEmpty()) {
             lifecycleScope.launch(Dispatchers.IO) {
                 val database = (requireActivity().application as MyApplication).database
                 val postDao = database.postDao()
+                val currentUser = FirebaseAuth.getInstance().currentUser
 
-                val comment = Comment(
-                    authorId = "user123", // Replace with actual user ID
-                    text = commentText,
-                    postId = currentPost.id
-                )
+                if (currentUser != null) {
+                    val authorId = currentUser.displayName ?: "user123" // או ערך ברירת מחדל אחר
 
-                currentPost.comments.add(comment)
-                postDao.updatePost(currentPost)
+                    val comment = Comment(
+                        authorId = authorId,
+                        text = commentText,
+                        postId = currentPost.id
+                    )
 
-                withContext(Dispatchers.Main) {
-                    addCommentEditText.text.clear()
-                    commentsAdapter.notifyDataSetChanged()
-                    updateUI()
+                    currentPost.comments.add(comment)
+                    postDao.updatePost(currentPost)
+
+                    withContext(Dispatchers.Main) {
+                        addCommentEditText.text.clear()
+                        commentsAdapter.notifyDataSetChanged()
+                        updateUI()
+                    }
+                } else {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(requireContext(), "Please log in to comment.", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }

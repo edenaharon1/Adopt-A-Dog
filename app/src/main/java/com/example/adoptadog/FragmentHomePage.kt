@@ -70,7 +70,10 @@ class HomePageFragment : Fragment() {
             (activity as? NavHostActivity)?.startLoading()
             navController.navigate(R.id.action_homePageFragment_to_uploadPostFragment)
         }
-
+//        lifecycleScope.launch(Dispatchers.IO) {
+//            val postDao = AppDatabase.getDatabase(requireContext(), lifecycleScope).postDao()
+//            postDao.deleteAllPosts()
+//        }
         recyclerView = view.findViewById(R.id.postsRecyclerView)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
 

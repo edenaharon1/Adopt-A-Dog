@@ -69,6 +69,8 @@ dependencies {
     // Design
     implementation ("com.google.android.material:material:1.8.0")
     implementation ("com.google.android.material:material:1.11.0")//bottom bar
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
+
 
     //picasso
     implementation("com.squareup.picasso:picasso:2.8")
