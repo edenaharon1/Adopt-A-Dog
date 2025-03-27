@@ -20,6 +20,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.adoptadog.database.AppDatabase
 import com.example.adoptadog.database.Post
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -107,7 +108,7 @@ class UploadPostFragment : Fragment() {
                 try {
                     val post = Post(
                         imageUrl = imageUri.toString(),
-                        userId = "1",
+                        userId = FirebaseAuth.getInstance().currentUser?.uid ?: "defaultUserId",
                         description = postText,
                         likes = emptyList(),
                         comments = mutableListOf(),
