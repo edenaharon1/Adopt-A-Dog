@@ -2,6 +2,7 @@ package com.example.adoptadog.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity(tableName = "posts")
 data class Post(
@@ -12,7 +13,7 @@ data class Post(
     val likes: List<String>,
     val comments: MutableList<Comment>, // שינוי כאן
     val timestamp: Long
-)
+): Serializable
 
 data class Comment(
     val authorId: String,

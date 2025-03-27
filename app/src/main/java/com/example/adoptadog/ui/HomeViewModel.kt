@@ -1,5 +1,6 @@
 package com.example.adoptadog.ui
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,18 +20,27 @@ class HomeViewModel(private val database: AppDatabase) : ViewModel() {
         loadPosts()
     }
 
-    private fun loadPosts() {
+    fun loadPosts() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val loadedPosts = database.postDao().getAllPosts()
+
+                // הוסיפי לוג עם מספר הפוסטים
+                Log.d("HomeViewModel", "Loaded posts: ${loadedPosts.size}")
+
+                // הדפס את פרטי הפוסטים
+                loadedPosts.forEachIndexed { index, post ->
+                    Log.d("HomeViewModel", "Post $index: ID=${post.id}, Description=${post.description}")
+                }
+
                 withContext(Dispatchers.Main) {
                     _posts.value = loadedPosts
                 }
             } catch (e: Exception) {
-                // טיפול בשגיאה
+                // הדפסת השגיאה המלאה
+                Log.e("HomeViewModel", "Error loading posts", e)
                 e.printStackTrace()
             }
         }
     }
-
 }
