@@ -50,6 +50,11 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation("com.google.android.material:material:1.11.0")
+    implementation(libs.firebase.database.ktx)
+    implementation(libs.firebase.firestore.ktx)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 
     // Navigation
     val nav_version = "2.7.5"
@@ -61,6 +66,24 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-storage")
+
+    
+
+
+        implementation("androidx.navigation:navigation-fragment-ktx:2.7.5") //תוספים של ה nav graph
+        implementation("androidx.navigation:navigation-ui-ktx:2.7.5")
+
+
+
+    // Design
+    implementation ("com.google.android.material:material:1.8.0")
+    implementation ("com.google.android.material:material:1.11.0")//bottom bar
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
+
+
+    //picasso
+    implementation("com.squareup.picasso:picasso:2.8")
+
 
     // Google Maps
     implementation("com.google.android.gms:play-services-maps:18.1.0")
@@ -79,6 +102,16 @@ dependencies {
     implementation("com.google.code.gson:gson:2.8.8")
     implementation("com.squareup.picasso:picasso:2.8")
     implementation("com.google.android.libraries.places:places:3.3.0")
+
+    //firebase
+    implementation ("com.google.firebase:firebase-auth-ktx:22.3.1")
+    implementation ("com.google.firebase:firebase-bom:32.7.0")
+    //edit posts
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
+
+
+}
 
 
     // Tests

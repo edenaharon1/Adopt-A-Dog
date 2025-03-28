@@ -1,9 +1,8 @@
 package com.example.adoptadog
 
-import android.Manifest
-import android.content.pm.PackageManager
+import android.app.Activity
+import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -16,14 +15,12 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.adoptadog.database.AppDatabase
 import com.example.adoptadog.database.Post
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -38,19 +35,7 @@ class UploadPostFragment : Fragment() {
     private lateinit var uploadNowButton: Button
     private var selectedImageUri: Uri? = null
 
-    private val pickImage =
-        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            if (uri != null) {
-                startLoading()
-                selectedImageUri = uri
-                imagePreview.setImageURI(uri)
-                Handler(Looper.getMainLooper()).postDelayed({
-                    stopLoading()
-                }, 1000)
-            } else {
-                Log.e("UploadPostFragment", "No image selected")
-            }
-        }
+    private val PICK_IMAGE_REQUEST = 1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -74,14 +59,43 @@ class UploadPostFragment : Fragment() {
             findNavController().navigateUp()
         }
 
-        requestPermissionsIfNeeded() // קריאה לפונקציית בקשת ההרשאות
-
         selectImageButton.setOnClickListener {
-            pickImage.launch("image/*")
+            selectImage()
         }
 
         uploadNowButton.setOnClickListener {
             uploadPost()
+        }
+    }
+
+    private fun selectImage() {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "image/*"
+        }
+        startActivityForResult(intent, PICK_IMAGE_REQUEST)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
+            data?.data?.let { uri ->
+                startLoading()
+                selectedImageUri = uri
+                imagePreview.setImageURI(uri)
+
+                val contentResolver = requireContext().contentResolver
+                val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                contentResolver.takePersistableUriPermission(uri, takeFlags)
+
+                Handler(Looper.getMainLooper()).postDelayed({
+                    stopLoading()
+                }, 1000)
+            }
+        } else {
+            Log.e("UploadPostFragment", "No image selected")
+            Toast.makeText(requireContext(), "לא נבחרה תמונה", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -94,10 +108,10 @@ class UploadPostFragment : Fragment() {
                 try {
                     val post = Post(
                         imageUrl = imageUri.toString(),
-                        userId = "1",
+                        userId = FirebaseAuth.getInstance().currentUser?.uid ?: "defaultUserId",
                         description = postText,
                         likes = emptyList(),
-                        comments = emptyList(),
+                        comments = mutableListOf(),
                         timestamp = System.currentTimeMillis()
                     )
                     AppDatabase.getDatabase(requireContext(), lifecycleScope).postDao().insert(post)
@@ -119,58 +133,11 @@ class UploadPostFragment : Fragment() {
         }
     }
 
-    private fun requestPermissionsIfNeeded() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.READ_MEDIA_IMAGES
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                ActivityCompat.requestPermissions(
-                    requireActivity(),
-                    arrayOf(Manifest.permission.READ_MEDIA_IMAGES),
-                    PERMISSION_REQUEST_CODE
-                )
-            }
-        } else {
-            if (ContextCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                ActivityCompat.requestPermissions(
-                    requireActivity(),
-                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                    PERMISSION_REQUEST_CODE
-                )
-            }
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted
-            } else {
-                Toast.makeText(requireContext(), "הרשאה נדחתה", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
     private fun startLoading() {
         progressBar.visibility = View.VISIBLE
     }
 
     private fun stopLoading() {
         progressBar.visibility = View.GONE
-    }
-
-    companion object {
-        private const val PERMISSION_REQUEST_CODE = 123
     }
 }

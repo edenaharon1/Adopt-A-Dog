@@ -1,89 +1,83 @@
-package com.example.adoptadog
+auth = Firebase.auth
+emailEditText = view.findViewById(R.id.emailInput)
+passwordEditText = view.findViewById(R.id.passwordInput)
+nameEditText = view.findViewById(R.id.nameInput)
+signupButton = view.findViewById(R.id.signupButton)
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
-import com.example.adoptadog.database.User
-import com.example.adoptadog.database.UserDao
-import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+userDao = (requireActivity().application as MyApplication).database.userDao()
 
-class FragmentSignUp : Fragment() {
+(activity as? NavHostActivity)?.startLoading()
+Handler(Looper.getMainLooper()).postDelayed({
+    (activity as? NavHostActivity)?.stopLoading()
+}, 1000)
 
-    private lateinit var emailInput: EditText
-    private lateinit var passwordInput: EditText
-    private lateinit var nameInput: EditText
-    private lateinit var signupButton: Button
-    private lateinit var userDao: UserDao
+view.findViewById<TextView>(R.id.loginButtonLink).setOnClickListener {
+    val intent = Intent(requireContext(), LoginActivity::class.java)
+    startActivity(intent)
+    requireActivity().finish()
+}
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_sign_up, container, false)
-    }
+signupButton.setOnClickListener {
+    val email = emailEditText.text.toString().trim()
+    val password = passwordEditText.text.toString().trim()
+    val name = nameEditText.text.toString().trim()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    if (email.isNotEmpty() && password.isNotEmpty() && name.isNotEmpty()) {
+        (activity as? NavHostActivity)?.startLoading()
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener(requireActivity()) { task ->
+                (activity as? NavHostActivity)?.stopLoading()
+                if (task.isSuccessful) {
+                    val firebaseUser = auth.currentUser
+                    firebaseUser?.let { user ->
+                        val newUser = User(
+                            uid = user.uid,
+                            name = name,
+                            email = email
+                        )
 
-        emailInput = view.findViewById(R.id.emailInput)
-        passwordInput = view.findViewById(R.id.passwordInput)
-        nameInput = view.findViewById(R.id.nameInput)
-        signupButton = view.findViewById(R.id.signupButton)
+                        // שמירה במסד נתונים מקומי (Room)
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            userDao.insert(newUser)
 
-        userDao = (requireActivity().application as MyApplication).database.userDao()
+                            // שמירה בפיירסטור
+                            val db = Firebase.firestore
+                            val userData = hashMapOf(
+                                "name" to name,
+                                "email" to email
+                            )
+                            db.collection("users").document(user.uid)
+                                .set(userData)
 
-        signupButton.setOnClickListener {
-            val email = emailInput.text.toString().trim()
-            val password = passwordInput.text.toString().trim()
-            val name = nameInput.text.toString().trim()
-
-            if (email.isNotEmpty() && password.isNotEmpty() && name.isNotEmpty()) {
-                FirebaseAuth.getInstance()
-                    .createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            val firebaseUser = FirebaseAuth.getInstance().currentUser
-                            firebaseUser?.let { user ->
-                                val newUser = User(
-                                    uid = user.uid,
-                                    name = name,
-                                    email = email
-                                )
-
-                                lifecycleScope.launch(Dispatchers.IO) {
-                                    userDao.insert(newUser)
-
-                                    withContext(Dispatchers.Main) {
-                                        Toast.makeText(
-                                            requireContext(),
-                                            "ההרשמה הצליחה!",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        findNavController().navigate(R.id.action_fragmentSignUp_to_homePageFragment)
-                                    }
-                                }
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "ההרשמה הצליחה!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                findNavController().navigate(R.id.action_fragmentSignUp_to_homePageFragment)
                             }
-                        } else {
-                            Toast.makeText(
-                                requireContext(),
-                                "ההרשמה נכשלה: ${task.exception?.message}",
-                                Toast.LENGTH_LONG
-                            ).show()
                         }
                     }
-            } else {
-                Toast.makeText(requireContext(), "יש למלא את כל השדות", Toast.LENGTH_SHORT).show()
+                } else {
+                    // טיפול בשגיאות ספציפיות
+                    when (task.exception) {
+                        is FirebaseAuthWeakPasswordException -> {
+                            Toast.makeText(context, "סיסמה חלשה. סיסמה צריכה להכיל לפחות 6 תווים.", Toast.LENGTH_SHORT).show()
+                        }
+                        is FirebaseAuthInvalidCredentialsException -> {
+                            Toast.makeText(context, "אימייל לא תקין.", Toast.LENGTH_SHORT).show()
+                        }
+                        is FirebaseAuthUserCollisionException -> {
+                            Toast.makeText(context, "משתמש עם אימייל זה כבר קיים.", Toast.LENGTH_SHORT).show()
+                        }
+                        else -> {
+                            Toast.makeText(context, "הרשמה נכשלה. אנא נסה שוב.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
             }
-        }
+    } else {
+        Toast.makeText(context, "אנא מלא את כל השדות", Toast.LENGTH_SHORT).show()
     }
 }

@@ -6,20 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context="com.example.adoptadog.fragments.EditPostsFragment">
-    <include layout="@layout/base_layout"/>
+    tools:context="com.example.adoptadog.fragments.EditPostsFragment"
+    tools:ignore="ExtraText">
 
-    <!-- סרגל עליון כתום -->
     <View
         android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:background="@color/brown"
         app:layout_constraintTop_toTopOf="parent"/>
-
-    <!-- כפתור יציאה -->
-
-    <!-- אייקון פרופיל -->
 
     <Button
         android:id="@+id/exit"
@@ -45,12 +40,11 @@
         app:layout_constraintTop_toTopOf="@id/topBar"
         android:layout_margin="16dp"/>
 
-    <!-- כותרת המסך -->
     <TextView
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="posts edit:"
+        android:text="My posts:"
         android:textSize="22sp"
         android:textColor="@color/black"
         android:textStyle="bold"
@@ -59,106 +53,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="8dp"/>
 
-    <!-- פוסט 1 -->
-    <ImageView
-        android:id="@+id/postImage1"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/doglogo"
-        android:scaleType="centerCrop"
-        app:layout_constraintTop_toBottomOf="@id/titleText"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_margin="16dp"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewPosts"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    app:layout_constraintTop_toBottomOf="@id/titleText"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    android:layout_marginTop="16dp"/>
 
-    <Button
-        android:id="@+id/editPost1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="edit"
-        android:textColor="@color/black"
-        android:background="@android:color/transparent"
-        app:layout_constraintStart_toEndOf="@id/postImage1"
-        app:layout_constraintTop_toTopOf="@id/postImage1"/>
 
-    <Button
-        android:id="@+id/deletePost1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="delete"
-        android:textColor="@color/black"
-        android:background="@android:color/transparent"
-        app:layout_constraintStart_toStartOf="@id/editPost1"
-        app:layout_constraintTop_toBottomOf="@id/editPost1"/>
-
-    <!-- פוסט 2 -->
-    <ImageView
-        android:id="@+id/postImage2"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/doglogo"
-        android:scaleType="centerCrop"
-        app:layout_constraintTop_toBottomOf="@id/postImage1"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_margin="16dp"/>
-
-    <Button
-        android:id="@+id/editPost2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="edit"
-        android:textColor="@color/black"
-        android:background="@android:color/transparent"
-        app:layout_constraintStart_toEndOf="@id/postImage2"
-        app:layout_constraintTop_toTopOf="@id/postImage2"/>
-
-    <Button
-        android:id="@+id/deletePost2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="delete"
-        android:textColor="@color/black"
-        android:background="@android:color/transparent"
-        android:layout_marginTop="8dp"
-    app:layout_constraintStart_toStartOf="@id/editPost2"
-        app:layout_constraintTop_toBottomOf="@id/editPost2"/>
-
-    <!-- פוסט 3 -->
-    <ImageView
-        android:id="@+id/postImage3"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/doglogo"
-        android:scaleType="centerCrop"
-        app:layout_constraintTop_toBottomOf="@id/postImage2"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_margin="16dp"/>
-
-    <Button
-        android:id="@+id/editPost3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="edit"
-        android:textColor="@color/black"
-        android:background="@android:color/transparent"
-        app:layout_constraintStart_toEndOf="@id/postImage3"
-        app:layout_constraintTop_toTopOf="@id/postImage3"/>
-
-    <Button
-        android:id="@+id/deletePost3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="delete"
-        android:textColor="@color/black"
-        android:background="@android:color/transparent"
-        app:layout_constraintStart_toStartOf="@id/editPost3"
-        app:layout_constraintTop_toBottomOf="@id/editPost3"/>
-
-    <!-- סרגל תחתון -->
-    <View
-        android:id="@+id/bottomBar"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@color/brown"
-        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

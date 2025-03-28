@@ -20,7 +20,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AdoptADog"
+        android:theme="@style/AppTheme.BackgroundWithStrip"
         tools:targetApi="31"
         tools:ignore="MissingClass">
         <activity
