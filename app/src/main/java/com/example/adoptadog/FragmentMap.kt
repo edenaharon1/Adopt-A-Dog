@@ -11,9 +11,8 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.android.volley.Request
-import com.android.volley.toolbox.JsonArrayRequest
-import com.android.volley.toolbox.Volley
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -29,6 +28,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap
     private lateinit var placesClient: PlacesClient
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var mapReady = false
 
     override fun onCreateView(
@@ -44,7 +44,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         if (!Places.isInitialized()) {
             Places.initialize(requireContext(), getString(R.string.google_maps_key))
         }
+
         placesClient = Places.createClient(requireContext())
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
         if (ContextCompat.checkSelfPermission(
                 requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
@@ -69,10 +71,26 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         map = googleMap
         mapReady = true
 
-        val israel = LatLng(31.0461, 34.8516)
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(israel, 7f))
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            map.isMyLocationEnabled = true
 
-        findNearbyShelters()
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                if (location != null) {
+                    val currentLatLng = LatLng(location.latitude, location.longitude)
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
+                } else {
+                    val israel = LatLng(31.0461, 34.8516)
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(israel, 7f))
+                }
+
+                findNearbyShelters()
+            }
+        } else {
+            Toast.makeText(requireContext(), "אין הרשאת מיקום", Toast.LENGTH_SHORT).show()
+        }
 
         map.setOnMarkerClickListener { marker ->
             val name = marker.title

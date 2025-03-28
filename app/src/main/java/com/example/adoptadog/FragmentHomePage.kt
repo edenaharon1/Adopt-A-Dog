@@ -57,7 +57,6 @@ class HomePageFragment : Fragment() {
         val addPostButton: Button = view.findViewById(R.id.addPostButton)
         val mapButton: ImageButton = view.findViewById(R.id.buttonToMap)
 
-
         profileIcon.setOnClickListener {
             (activity as? NavHostActivity)?.startLoading()
             navController.navigate(R.id.FragmentProfile)
@@ -73,12 +72,6 @@ class HomePageFragment : Fragment() {
             (activity as? NavHostActivity)?.startLoading()
             navController.navigate(R.id.action_homePageFragment_to_uploadPostFragment)
         }
-//        lifecycleScope.launch(Dispatchers.IO) {
-//            val postDao = AppDatabase.getDatabase(requireContext(), lifecycleScope).postDao()
-//            postDao.deleteAllPosts()
-//        }
-        recyclerView = view.findViewById(R.id.postsRecyclerView)
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
 
         mapButton.setOnClickListener {
             navController.navigate(R.id.fragmentMap)
@@ -90,38 +83,20 @@ class HomePageFragment : Fragment() {
         val database = (requireActivity().application as MyApplication).database
         val postDao = database.postDao()
 
-        adapter = PostAdapter(mutableListOf()) { post ->
-            // פעולה בלחיצה על פוסט
-        }
-
-        Log.d("HomePageFragment", "LayoutManager: ${recyclerView.layoutManager}")
-
-
-
-        adapter = PostAdapter(mutableListOf(), navController, isEditMode = false) // הוספנו isEditMode = false
+        adapter = PostAdapter(mutableListOf(), navController, isEditMode = false)
         recyclerView.adapter = adapter
 
         val factory = HomeViewModelFactory(database)
         viewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
 
-        // Load posts initially
         loadPosts(postDao)
 
         viewModel.posts.observe(viewLifecycleOwner) { posts ->
             Log.d("HomePageFragment", "Posts received: ${posts.size}")
-
-            if (adapter == null) {
-                Log.e("HomePageFragment", "Adapter is null!")
-            } else {
-                Log.d("HomePageFragment", "Adapter is not null")
-            }
-
             posts.forEachIndexed { index, post ->
                 Log.d("HomePageFragment", "Post $index: ID=${post.id}, Description=${post.description}")
             }
-
             adapter.updatePosts(posts)
-
             if (posts.isEmpty()) {
                 Toast.makeText(requireContext(), "אין פוסטים להצגה", Toast.LENGTH_SHORT).show()
             }
@@ -131,14 +106,9 @@ class HomePageFragment : Fragment() {
     private fun loadPosts(postDao: com.example.adoptadog.database.PostDao) {
         lifecycleScope.launch(Dispatchers.IO) {
             val posts = postDao.getAllPosts()
-            Log.d("PostLoading", "Loaded posts directly from DAO: ${posts.size}")
-
             withContext(Dispatchers.Main) {
                 adapter.updatePosts(posts)
-
-                if (posts.isEmpty()) {
-                    Toast.makeText(requireContext(), "לא נמצאו פוסטים", Toast.LENGTH_SHORT).show()
-                }
+                (activity as? NavHostActivity)?.stopLoading()
             }
         }
     }
@@ -179,15 +149,4 @@ class HomePageFragment : Fragment() {
             }
         }
     }
-
-    private fun loadPosts(postDao: com.example.adoptadog.database.PostDao) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            val posts = postDao.getAllPosts()
-            withContext(Dispatchers.Main) {
-                adapter.updatePosts(posts)
-                (activity as? NavHostActivity)?.stopLoading()
-            }
-        }
-    }
 }
-
