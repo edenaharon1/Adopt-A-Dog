@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark_orange"
-    tools:context="com.example.adoptadog.FragmentSignUp">
+    tools:context=".FragmentSignUp">
+
     <include layout="@layout/base_layout"/>
 
     <ImageView
@@ -165,7 +166,6 @@
             android:clickable="true"
             android:focusable="true"
             android:gravity="start"/>
-
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

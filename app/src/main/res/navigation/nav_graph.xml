@@ -6,6 +6,14 @@
     app:startDestination="@id/homePageFragment">
 
     <fragment
+        android:id="@+id/fragmentMap"
+        android:name="com.example.adoptadog.MapFragment"
+        android:label="Map"
+        tools:layout="@layout/fragment_map" />
+
+
+
+    <fragment
         android:id="@+id/editPostsFragment"
         android:name="com.example.adoptadog.fragments.EditPostsFragment"
         android:label="fragment_edit_posts"
