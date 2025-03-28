@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -54,6 +55,8 @@ class HomePageFragment : Fragment() {
         val profileIcon = view.findViewById<ImageView>(R.id.profileIcon)
         val logoutButton: Button = view.findViewById(R.id.logoutButton)
         val addPostButton: Button = view.findViewById(R.id.addPostButton)
+        val mapButton: ImageButton = view.findViewById(R.id.buttonToMap)
+
 
         profileIcon.setOnClickListener {
             (activity as? NavHostActivity)?.startLoading()
@@ -77,10 +80,24 @@ class HomePageFragment : Fragment() {
         recyclerView = view.findViewById(R.id.postsRecyclerView)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
 
-        Log.d("HomePageFragment", "LayoutManager: ${recyclerView.layoutManager}")
+        mapButton.setOnClickListener {
+            navController.navigate(R.id.fragmentMap)
+        }
+
+        recyclerView = view.findViewById(R.id.postsRecyclerView)
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
 
         val database = (requireActivity().application as MyApplication).database
         val postDao = database.postDao()
+
+        adapter = PostAdapter(mutableListOf(), findNavController()) { post ->
+            // פעולה בלחיצה על פוסט
+        }
+
+
+        Log.d("HomePageFragment", "LayoutManager: ${recyclerView.layoutManager}")
+
+
 
         adapter = PostAdapter(mutableListOf(), navController, isEditMode = false) // הוספנו isEditMode = false
         recyclerView.adapter = adapter
@@ -154,7 +171,6 @@ class HomePageFragment : Fragment() {
         if (requestCode == READ_MEDIA_IMAGES_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Log.d("HomePageFragment", "Permissions granted")
-                // לאחר קבלת הרשאות, טען את הפוסטים
                 val database = (requireActivity().application as MyApplication).database
                 val postDao = database.postDao()
                 loadPosts(postDao)
@@ -164,4 +180,6 @@ class HomePageFragment : Fragment() {
             }
         }
     }
+
 }
+
