@@ -22,9 +22,7 @@ import kotlinx.coroutines.withContext
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var progressBar: ProgressBar
-
     private lateinit var userDao: UserDao
-
     private lateinit var auth: FirebaseAuth
     private lateinit var emailEditText: EditText
     private lateinit var passwordEditText: EditText
@@ -34,10 +32,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.login_activity)
 
         progressBar = findViewById(R.id.progressBar)
-
-
         userDao = (application as MyApplication).database.userDao()
-
         auth = Firebase.auth
         emailEditText = findViewById(R.id.emailInput)
         passwordEditText = findViewById(R.id.passwordInput)
@@ -46,55 +41,53 @@ class LoginActivity : AppCompatActivity() {
         val signInButton = findViewById<Button>(R.id.sign_in)
 
         loginButton.setOnClickListener {
-val email = emailEditText.text.toString()
-val password = passwordEditText.text.toString()
+            val email = emailEditText.text.toString()
+            val password = passwordEditText.text.toString()
 
-if (email.isNotBlank() && password.isNotBlank()) {
-    startLoading()
-    
-    // התחברות ל־Firebase
-    FirebaseAuth.getInstance()
-        .signInWithEmailAndPassword(email, password)
-        .addOnCompleteListener(this) { task ->
-            if (task.isSuccessful) {
-                val firebaseUser = FirebaseAuth.getInstance().currentUser
-                if (firebaseUser != null) {
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        val userInRoom = userDao.getUserById(firebaseUser.uid)
-                        withContext(Dispatchers.Main) {
-                            if (userInRoom != null) {
-                                navigateToNavHostActivity(false)
+            if (email.isNotBlank() && password.isNotBlank()) {
+                startLoading()
+
+                FirebaseAuth.getInstance()
+                    .signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this) { task ->
+                        if (task.isSuccessful) {
+                            val firebaseUser = FirebaseAuth.getInstance().currentUser
+                            if (firebaseUser != null) {
+                                lifecycleScope.launch(Dispatchers.IO) {
+                                    val userInRoom = userDao.getUserById(firebaseUser.uid)
+                                    withContext(Dispatchers.Main) {
+                                        if (userInRoom != null) {
+                                            navigateToNavHostActivity(false)
+                                        } else {
+                                            stopLoading()
+                                            FirebaseAuth.getInstance().signOut()
+                                            Toast.makeText(
+                                                this@LoginActivity,
+                                                "המשתמש לא קיים באפליקציה. יש להירשם תחילה.",
+                                                Toast.LENGTH_LONG
+                                            ).show()
+                                        }
+                                    }
+                                }
                             } else {
                                 stopLoading()
-                                FirebaseAuth.getInstance().signOut()
-                                Toast.makeText(
-                                    this@LoginActivity,
-                                    "המשתמש לא קיים באפליקציה. יש להירשם תחילה.",
-                                    Toast.LENGTH_LONG
-                                ).show()
+                                Toast.makeText(this, "שגיאה בהתחברות", Toast.LENGTH_SHORT).show()
                             }
+                        } else {
+                            stopLoading()
+                            Toast.makeText(baseContext, "התחברות נכשלה. אנא נסה שוב.", Toast.LENGTH_SHORT).show()
                         }
                     }
-                } else {
-                    stopLoading()
-                    Toast.makeText(this, "שגיאה בהתחברות", Toast.LENGTH_SHORT).show()
-                }
             } else {
-                stopLoading()
-                Toast.makeText(baseContext, "התחברות נכשלה. אנא נסה שוב.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "יש למלא אימייל וסיסמה", Toast.LENGTH_SHORT).show()
             }
         }
-} else {
-    Toast.makeText(this, "יש למלא אימייל וסיסמה", Toast.LENGTH_SHORT).show()
-}
 
-signInButton.setOnClickListener {
-    val intent = Intent(this, NavHostActivity::class.java)
-    intent.putExtra("openSignUpFragment", true)
-    startActivity(intent)
-    finish()
-}
-
+        signInButton.setOnClickListener {
+            val intent = Intent(this, NavHostActivity::class.java)
+            intent.putExtra("openSignUpFragment", true)
+            startActivity(intent)
+            finish()
         }
     }
 

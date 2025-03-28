@@ -12,7 +12,13 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.auth.FirebaseAuth
+import com.squareup.picasso.Picasso
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class FragmentEditProfile : Fragment() {
 
@@ -48,6 +54,17 @@ class FragmentEditProfile : Fragment() {
             saveChanges()
         }
 
+        // הצגת תמונת הפרופיל הנוכחית ושם המשתמש
+        lifecycleScope.launch(Dispatchers.IO) {
+            val user = (requireActivity().application as MyApplication).database.userDao().getUserById(FirebaseAuth.getInstance().currentUser?.uid ?: return@launch)
+            withContext(Dispatchers.Main){
+                user?.profileImageUri?.let {
+                    Picasso.get().load(it).into(profileImageView)
+                }
+                usernameEditText.setText(user?.name)
+            }
+        }
+
         return view
     }
 
@@ -67,11 +84,17 @@ class FragmentEditProfile : Fragment() {
 
     private fun saveChanges() {
         val newUsername = usernameEditText.text.toString()
-        val bundle = Bundle()
-        bundle.putString("newUsername", newUsername)
-        bundle.putParcelable("selectedImageUri", selectedImageUri) //הוספת שורה
-        findNavController().previousBackStackEntry?.savedStateHandle?.set("username", newUsername)
-        findNavController().previousBackStackEntry?.savedStateHandle?.set("imageUri", selectedImageUri) //הוספת שורה
-        findNavController().popBackStack()
+        val imageUriString = selectedImageUri?.toString()
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            (requireActivity().application as MyApplication).database.userDao().updateUser(uid, newUsername, imageUriString)
+
+            withContext(Dispatchers.Main) {
+                findNavController().previousBackStackEntry?.savedStateHandle?.set("username", newUsername)
+                findNavController().previousBackStackEntry?.savedStateHandle?.set("imageUri", selectedImageUri)
+                findNavController().popBackStack()
+            }
+        }
     }
 }
