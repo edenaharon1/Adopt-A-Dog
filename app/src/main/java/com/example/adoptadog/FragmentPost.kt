@@ -32,7 +32,6 @@ class PostFragment : Fragment() {
     private lateinit var commentsAdapter: CommentsAdapter
     private lateinit var addCommentEditText: EditText
     private lateinit var addCommentButton: Button
-    private lateinit var adoptNowButton: Button
     private lateinit var backButton: Button
     private lateinit var currentPost: Post
 
@@ -53,7 +52,6 @@ class PostFragment : Fragment() {
         commentsRecyclerView = view.findViewById(R.id.commentsRecyclerView)
         addCommentEditText = view.findViewById(R.id.addCommentEditText)
         addCommentButton = view.findViewById(R.id.addCommentButton)
-        adoptNowButton = view.findViewById(R.id.adoptNowButton)
         backButton = view.findViewById(R.id.backButton)
 
         postId = arguments?.getLong("postId") ?: -1
@@ -74,9 +72,6 @@ class PostFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        adoptNowButton.setOnClickListener {
-            // Add logic for adopting the dog
-        }
     }
 
     private fun loadPostData() {
@@ -122,10 +117,12 @@ class PostFragment : Fragment() {
             lifecycleScope.launch(Dispatchers.IO) {
                 val database = (requireActivity().application as MyApplication).database
                 val postDao = database.postDao()
+                val userDao = database.userDao()
                 val currentUser = FirebaseAuth.getInstance().currentUser
 
                 if (currentUser != null) {
-                    val authorId = currentUser.displayName ?: "user123" // או ערך ברירת מחדל אחר
+                    val user = userDao.getUserById(currentUser.uid)
+                    val authorId = user?.name ?: "user123" // שינוי כאן
 
                     val comment = Comment(
                         authorId = authorId,
