@@ -13,13 +13,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.adoptadog.database.UserDao
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 
 class LoginActivity : AppCompatActivity() {
 
@@ -48,8 +46,8 @@ class LoginActivity : AppCompatActivity() {
         val signInButton = findViewById<Button>(R.id.sign_in)
 
         loginButton.setOnClickListener {
-val email = emailInput.text.toString()
-val password = passwordInput.text.toString()
+val email = emailEditText.text.toString()
+val password = passwordEditText.text.toString()
 
 if (email.isNotBlank() && password.isNotBlank()) {
     startLoading()

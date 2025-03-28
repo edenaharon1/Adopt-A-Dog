@@ -111,16 +111,6 @@
                         style="@style/Widget.MaterialComponents.Button.TextButton"/>
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/editPostsButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Edit Posts"
-                        android:textAlignment="textStart"
-                        android:textSize="16sp"
-                        app:iconGravity="start"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"/>
-
-                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/editProfileButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

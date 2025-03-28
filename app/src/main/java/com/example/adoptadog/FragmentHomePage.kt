@@ -90,9 +90,10 @@ class HomePageFragment : Fragment() {
         val database = (requireActivity().application as MyApplication).database
         val postDao = database.postDao()
 
-        adapter = PostAdapter(mutableListOf()) { post ->
+        adapter = PostAdapter(mutableListOf(), findNavController()) { post ->
             // פעולה בלחיצה על פוסט
         }
+
 
         Log.d("HomePageFragment", "LayoutManager: ${recyclerView.layoutManager}")
 
@@ -180,14 +181,5 @@ class HomePageFragment : Fragment() {
         }
     }
 
-    private fun loadPosts(postDao: com.example.adoptadog.database.PostDao) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            val posts = postDao.getAllPosts()
-            withContext(Dispatchers.Main) {
-                adapter.updatePosts(posts)
-                (activity as? NavHostActivity)?.stopLoading()
-            }
-        }
-    }
 }
 
