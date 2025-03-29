@@ -24,6 +24,7 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 
+
 class MapFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap
@@ -81,55 +82,28 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 if (location != null) {
                     val currentLatLng = LatLng(location.latitude, location.longitude)
                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
+
+                    // קירוב לעיר הנוכחית + שליפת עמותות
+                    VolleyRequestManager(requireContext()).fetchNearbyAnimalShelters(
+                        currentLatLng,
+                        map
+                    ) {}
                 } else {
                     val israel = LatLng(31.0461, 34.8516)
                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(israel, 7f))
+                    Toast.makeText(requireContext(), "לא הצלחנו לאתר את מיקומך", Toast.LENGTH_SHORT).show()
                 }
-
-                findNearbyShelters()
             }
         } else {
             Toast.makeText(requireContext(), "אין הרשאת מיקום", Toast.LENGTH_SHORT).show()
         }
 
+        // מאפשר למפה להציג את הבועה הרגילה כשמשתמש לוחץ על אייקון
         map.setOnMarkerClickListener { marker ->
-            val name = marker.title
-            val phone = marker.snippet
-            Toast.makeText(requireContext(), "$name\n$phone", Toast.LENGTH_LONG).show()
-            true
-        }
-    }
-
-    private fun findNearbyShelters() {
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            Toast.makeText(requireContext(), "נדרש אישור מיקום", Toast.LENGTH_SHORT).show()
-            return
+            marker.showInfoWindow() // מציג את הבועה של אותו סמן
+            false // חשוב: מחזיר false כדי לא לחסום את ההתנהגות של Google Maps
         }
 
-        val placeFields = listOf(Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.PHONE_NUMBER)
-        val request = FindCurrentPlaceRequest.newInstance(placeFields)
-
-        placesClient.findCurrentPlace(request)
-            .addOnSuccessListener { response ->
-                for (placeLikelihood in response.placeLikelihoods) {
-                    val place = placeLikelihood.place
-                    if (place.name?.contains("עמות", ignoreCase = true) == true) {
-                        val position = place.latLng
-                        map.addMarker(
-                            MarkerOptions()
-                                .position(position!!)
-                                .title(place.name)
-                                .snippet(place.phoneNumber ?: "טלפון לא זמין")
-                        )
-                    }
-                }
-            }
-            .addOnFailureListener { e ->
-                Log.e("MapFragment", "Place not found: ${e.message}")
-            }
     }
 
     override fun onRequestPermissionsResult(
