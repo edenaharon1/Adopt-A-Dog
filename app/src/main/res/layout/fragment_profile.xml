@@ -32,13 +32,6 @@
                 app:cornerRadius="20dp"
                 android:paddingHorizontal="16dp"/>
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profileIconSmall"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/ic_profile"
-                android:layout_gravity="end"
-                android:layout_marginEnd="16dp"/>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -105,16 +98,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="My Posts"
-                        android:textAlignment="textStart"
-                        android:textSize="16sp"
-                        app:iconGravity="start"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"/>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/editPostsButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Edit Posts"
                         android:textAlignment="textStart"
                         android:textSize="16sp"
                         app:iconGravity="start"

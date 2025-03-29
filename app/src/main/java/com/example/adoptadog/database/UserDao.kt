@@ -15,4 +15,8 @@ interface UserDao {
 
     @Query("SELECT * FROM users")
     suspend fun getAllUsers(): List<User>
+
+
+    @Query("UPDATE users SET name = :name, profileImageUri = :profileImageUri WHERE uid = :uid")
+    suspend fun updateUser(uid: String, name: String, profileImageUri: String?)
 }

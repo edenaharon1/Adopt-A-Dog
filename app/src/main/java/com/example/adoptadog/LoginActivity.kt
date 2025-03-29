@@ -33,13 +33,15 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.login_activity)
 
         progressBar = findViewById(R.id.progressBar)
+
+        userDao = (application as MyApplication).database.userDao()
+        auth = Firebase.auth
         emailEditText = findViewById(R.id.emailInput)
         passwordEditText = findViewById(R.id.passwordInput)
         val loginButton = findViewById<Button>(R.id.loginButton)
         val signInButton = findViewById<Button>(R.id.sign_in)
 
-        auth = Firebase.auth
-        userDao = (application as MyApplication).database.userDao()
+
 
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString()
@@ -52,6 +54,7 @@ class LoginActivity : AppCompatActivity() {
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
                             val firebaseUser = auth.currentUser
+
                             if (firebaseUser != null) {
                                 lifecycleScope.launch(Dispatchers.IO) {
                                     val userInRoom = userDao.getUserById(firebaseUser.uid)
@@ -61,6 +64,7 @@ class LoginActivity : AppCompatActivity() {
                                         } else {
                                             stopLoading()
                                             auth.signOut()
+
                                             Toast.makeText(
                                                 this@LoginActivity,
                                                 "המשתמש לא קיים באפליקציה. יש להירשם תחילה.",
@@ -76,6 +80,7 @@ class LoginActivity : AppCompatActivity() {
                         } else {
                             stopLoading()
                             Toast.makeText(this, "התחברות נכשלה. אנא נסה שוב.", Toast.LENGTH_SHORT).show()
+
                         }
                     }
             } else {

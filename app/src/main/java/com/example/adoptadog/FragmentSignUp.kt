@@ -12,6 +12,15 @@ import androidx.navigation.fragment.findNavController
 import com.example.adoptadog.database.User
 import com.example.adoptadog.database.UserDao
 import com.google.firebase.auth.*
+
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -87,6 +96,7 @@ class FragmentSignUp : Fragment(R.layout.fragment_sign_up) {
                                     withContext(Dispatchers.Main) {
                                         Toast.makeText(requireContext(), "ההרשמה הצליחה!", Toast.LENGTH_SHORT).show()
                                         findNavController().navigate(R.id.action_fragmentSignUp_to_homePageFragment)
+
                                     }
                                 }
                             }
