@@ -5,14 +5,18 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.widget.*
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.example.adoptadog.database.User
+import com.example.adoptadog.database.UserDao
+import com.google.firebase.auth.*
+
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
-import com.example.adoptadog.database.User
-import com.example.adoptadog.database.UserDao
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
@@ -90,10 +94,9 @@ class FragmentSignUp : Fragment(R.layout.fragment_sign_up) {
                                     db.collection("users").document(user.uid).set(userData)
 
                                     withContext(Dispatchers.Main) {
-                                        Toast.makeText(requireContext(), "ההרשמה הצליחה! תועבר למסך ההתחברות", Toast.LENGTH_SHORT).show()
-                                        val intent = Intent(requireContext(), LoginActivity::class.java)
-                                        startActivity(intent)
-                                        requireActivity().finish()
+                                        Toast.makeText(requireContext(), "ההרשמה הצליחה!", Toast.LENGTH_SHORT).show()
+                                        findNavController().navigate(R.id.action_fragmentSignUp_to_homePageFragment)
+
                                     }
                                 }
                             }

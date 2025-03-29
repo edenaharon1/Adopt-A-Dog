@@ -11,9 +11,8 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.android.volley.Request
-import com.android.volley.toolbox.JsonArrayRequest
-import com.android.volley.toolbox.Volley
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -25,10 +24,12 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 
+
 class MapFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap
     private lateinit var placesClient: PlacesClient
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var mapReady = false
 
     override fun onCreateView(
@@ -44,7 +45,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         if (!Places.isInitialized()) {
             Places.initialize(requireContext(), getString(R.string.google_maps_key))
         }
+
         placesClient = Places.createClient(requireContext())
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
         if (ContextCompat.checkSelfPermission(
                 requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
@@ -69,49 +72,38 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         map = googleMap
         mapReady = true
 
-        val israel = LatLng(31.0461, 34.8516)
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(israel, 7f))
-
-        findNearbyShelters()
-
-        map.setOnMarkerClickListener { marker ->
-            val name = marker.title
-            val phone = marker.snippet
-            Toast.makeText(requireContext(), "$name\n$phone", Toast.LENGTH_LONG).show()
-            true
-        }
-    }
-
-    private fun findNearbyShelters() {
         if (ActivityCompat.checkSelfPermission(
                 requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
+            ) == PackageManager.PERMISSION_GRANTED
         ) {
-            Toast.makeText(requireContext(), "נדרש אישור מיקום", Toast.LENGTH_SHORT).show()
-            return
-        }
+            map.isMyLocationEnabled = true
 
-        val placeFields = listOf(Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.PHONE_NUMBER)
-        val request = FindCurrentPlaceRequest.newInstance(placeFields)
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                if (location != null) {
+                    val currentLatLng = LatLng(location.latitude, location.longitude)
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
 
-        placesClient.findCurrentPlace(request)
-            .addOnSuccessListener { response ->
-                for (placeLikelihood in response.placeLikelihoods) {
-                    val place = placeLikelihood.place
-                    if (place.name?.contains("עמות", ignoreCase = true) == true) {
-                        val position = place.latLng
-                        map.addMarker(
-                            MarkerOptions()
-                                .position(position!!)
-                                .title(place.name)
-                                .snippet(place.phoneNumber ?: "טלפון לא זמין")
-                        )
-                    }
+                    // קירוב לעיר הנוכחית + שליפת עמותות
+                    VolleyRequestManager(requireContext()).fetchNearbyAnimalShelters(
+                        currentLatLng,
+                        map
+                    ) {}
+                } else {
+                    val israel = LatLng(31.0461, 34.8516)
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(israel, 7f))
+                    Toast.makeText(requireContext(), "לא הצלחנו לאתר את מיקומך", Toast.LENGTH_SHORT).show()
                 }
             }
-            .addOnFailureListener { e ->
-                Log.e("MapFragment", "Place not found: ${e.message}")
-            }
+        } else {
+            Toast.makeText(requireContext(), "אין הרשאת מיקום", Toast.LENGTH_SHORT).show()
+        }
+
+        // מאפשר למפה להציג את הבועה הרגילה כשמשתמש לוחץ על אייקון
+        map.setOnMarkerClickListener { marker ->
+            marker.showInfoWindow() // מציג את הבועה של אותו סמן
+            false // חשוב: מחזיר false כדי לא לחסום את ההתנהגות של Google Maps
+        }
+
     }
 
     override fun onRequestPermissionsResult(
